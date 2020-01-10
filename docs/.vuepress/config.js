@@ -28,7 +28,8 @@ module.exports = {
 }
 function genEssentialsSidebar(type = '') {
     const mapArr = [
-        '/Overview/'
+        '/Overview/',
+        '/Overview/essentials/'
     ]
     return mapArr.map(i => {
         return type + i
@@ -36,7 +37,9 @@ function genEssentialsSidebar(type = '') {
 }
 
 function genAdvancedSidebar(type = '') {
-    const mapArr = []
+    const mapArr = [
+        '/Overview/advanved/'
+    ]
     return mapArr.map(i => {
         return type + i
     })
