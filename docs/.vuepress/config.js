@@ -5,7 +5,7 @@ module.exports = {
         lineNumbers: true
     },
     themeConfig: {
-        sidebarDepth: 3,
+        sidebarDepth: 4,
         nav: [
             { text: '首页', link: '/' },
             { text: 'Github', link: 'https://github.com/umbrella22/electron-vue-template' },
@@ -38,7 +38,10 @@ function genEssentialsSidebar(type = '') {
 
 function genAdvancedSidebar(type = '') {
     const mapArr = [
-        '/Overview/advanved/'
+        '/Overview/advanced/',
+        '/Overview/advanced/RouteLazyLoading.md',
+        '/Overview/advanced/icon.md',
+        '/Overview/advanced/webpack.md'
     ]
     return mapArr.map(i => {
         return type + i

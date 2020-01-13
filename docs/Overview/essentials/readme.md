@@ -170,10 +170,87 @@ export default initWindow
 :::
 ### downloadFile.js和checkupdate.js
 这两个js都是可以用来下载更新得，但区别就在于，checkupdate中使用的是[electron-updater](https://www.electron.build/auto-update)，而downloadFile，看名字其实大家也能猜出来，它不只是可以用来更新，没错哦，它是使用了webContents的downloadURL方法，可以下载任何，你想下载的东西，只需要你给它传递好链接就好。
-- dowloadFile中通讯以及参数详情
+#### dowloadFile.js
 
-名称|参数|类型
---|:--:|--:
-satrt-download|downloadUrL|String
-version|无|String
-baseUrl|无|String
+- dowloadFile中参数详情
+
+名称|参数|类型|说明
+--|:--:|--:|:--|
+version|无|String|版本信息，在本项目中是直接从package.json中获取版本号
+baseUrl|无|String|下载地址前缀，您可以将url相同部分拆解开，设置成类似baseUrl+Url这样的组合
+Sysarch|无|String|系统类型，使用os模块识别当前系统的位数区别
+defaultDownloadUrL|无|String|默认下载链接，当没有外部传入下载链接时，默认使用js内部方法获取的下载地址
+filePath|无|String|默认为系统的下载目录，默认代码中无法修改
+
+- dowloadFile通讯详情
+
+名称|参数|类型|说明
+:--:|:--:|--:|:--|
+start-download|downloadUrL|String|主进程监听通讯，用来监听渲染进程是否发送start-download同时接受一个可选参数downloadUrL，若没有该参数则默认使用defaultDownloadUrL
+confirm-download|无|无|主进程发送通讯，当下载正常启动时，向渲染进程发送一个true值。
+download-progress|无|无|主进程发送通讯，向渲染进程发送下载进度，默认整数。
+download-paused|无|无|主进程发送通讯，当下载被意外或主动暂停时触发，向渲染进程发送true值。
+download-done|无|无|主进程发送通讯，下载完成时触发，返回文件路径。
+download-error|无|无|主进程发送通讯，下载失败时触发，向渲染进程发送true值。
+
+#### checkupdate.js
+
+- checkupdate中参数说明
+只有一个向渲染进程发送UpdateMsg，参数为object，内包含一个state和msg；其中state中的值为：-1 检查更新失败 0 正在检查更新 1 检测到新版本，准备下载 2 未检测到新版本 3 下载中 4 下载完成；当触发到4状态时，此时主进程中监听confirm-update，使用该名称即可触发重启更新功能。
+
+### ipcMain.js
+这里没啥好说的，这里面的话就是小封装了一个提示弹窗，一个错误弹窗，以及一些自定义头部需要调用到的窗口大小变化。
+```javascript
+import { ipcMain, dialog } from 'electron'
+export default {
+  Mainfunc (mainWindow, IsUseSysTitle) {
+    ipcMain.on('IsUseSysTitle', (event) => {
+      const data = IsUseSysTitle
+      event.reply('CisUseSysTitle', data)
+    })
+    ipcMain.on('windows-mini', () => {
+      mainWindow.minimize()
+    })
+    ipcMain.on('window-max', (event) => {
+      if (mainWindow.isMaximized()) {
+        event.reply('window-confirm', false)
+        mainWindow.restore()
+      } else {
+        event.reply('window-confirm', true)
+        mainWindow.maximize()
+      }
+    })
+    ipcMain.on('window-close', () => {
+      mainWindow.close()
+    })
+    // 参数说明见下表
+    ipcMain.on('open-messagebox', (event, arg) => {
+      dialog.showMessageBox(mainWindow, {
+        type: arg.type || 'info',
+        title: arg.title || '',
+        buttons: arg.buttons || [],
+        message: arg.message || '',
+        noLink: arg.noLink || true
+      }).then(res => {
+        event.reply('confirm-message', res)
+      })
+    })
+    ipcMain.on('open-errorbox', (event, arg) => {
+      dialog.showErrorBox(
+        arg.title,
+        arg.message
+      )
+    })
+  }
+}
+
+```
+- 弹窗参数说明
+
+名称|类型|说明
+:--:|:--:|:--|
+type|String|默认值：'info',可以为 "none", "info", "error", "question" 或者 "warning". 在 Windows 上, "question" 与"info"显示相同的图标, 除非你使用了 "icon" 选项设置图标。 在 macOS 上, "warning" 和 "error" 显示相同的警告图标
+title|String|message box 的标题，一些平台不显示.
+buttons|Array[String]|按钮的文本数组。在 Windows 上, 空数组在按钮上会显示 "OK".
+message|String|message box 的内容.
+noLink|Boolean|别问为啥是true，问就是自己设置成false试一试。 (´・ω・`)

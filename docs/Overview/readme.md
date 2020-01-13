@@ -75,14 +75,18 @@
 ```
 
 ## 安装
-
+::: danger 注意
+请不要自作主张在安装依赖的时候添加`-g`参数！除非您很清楚您正在做什么！
+:::
 ```bash
 # clone项目
 git clone https://github.com/umbrella22/electron-vue-template.git
 # 进入项目目录
 cd electron-vue-template
 # 安装依赖
+# 如果网络非常顺畅的情况下
 npm install
+# 如果网络出现一定的情况
 # 建议不要使用cnpm，会出现各种玄学bug。您可以通过如下操作加快安装速度
 npm install --registry=https://registry.npm.taobao.org
 # 但是需要注意的是electron的本体下载并不是走这里所以还是要去设置一下
@@ -94,12 +98,16 @@ npm config edit
 # 本地开发 启动项目
 npm run dev 或 yarn dev
 ```
-::: tip 
+::: danger 注意
 强烈建议不要直接使用cnpm进行安装，那种玄学bug是真的没法说，最好就是用nrm切换一下registry，或者使用yarn，是最好的了。
 
 一般遇到`Electron failed to install correctly，please delete node_moules/electron and try installing again`这种错误时，就是electron本体没有下载成功，删除node_module文件夹，并按照上面的设置进行electron镜像地址设置之后就好了
 
 同时本项目的css预处理器使用的时node-sass所以同样依赖python2.7的，如果你之前没有安装的话，需要自己去看一下哦
+:::
+
+::: warning 注意
+这里的环境指的是windows下，如果您是MacOS或者是linux的话，您可能需要熟悉vim的操作。
 :::
 
 在启动完成之后，就会自动打开程序界面了；接下来你就可以针对你自己的需求进行代码的修改和业务开发
