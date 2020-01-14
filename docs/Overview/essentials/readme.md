@@ -254,3 +254,5 @@ title|String|message box 的标题，一些平台不显示.
 buttons|Array[String]|按钮的文本数组。在 Windows 上, 空数组在按钮上会显示 "OK".
 message|String|message box 的内容.
 noLink|Boolean|别问为啥是true，问就是自己设置成false试一试。 (´・ω・`)
+
+- DisableButton和menu就真的没啥好说的了，直接去项目中看代码就好，一个是注册全局快捷键禁用F12的示例一个是顶部菜单栏的示例。

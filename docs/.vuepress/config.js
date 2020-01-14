@@ -26,24 +26,25 @@ module.exports = {
     }
 
 }
-function genEssentialsSidebar(type = '') {
+function genEssentialsSidebar() {
     const mapArr = [
         '/Overview/',
-        '/Overview/essentials/'
+        '/Overview/essentials/',
+        '/Overview/essentials/renderer-process.md'
     ]
     return mapArr.map(i => {
-        return type + i
+        return i
     })
 }
 
-function genAdvancedSidebar(type = '') {
+function genAdvancedSidebar() {
     const mapArr = [
         '/Overview/advanced/',
         '/Overview/advanced/RouteLazyLoading.md',
-        '/Overview/advanced/icon.md',
+        '/Overview/advanced/ffi.md',
         '/Overview/advanced/webpack.md'
     ]
     return mapArr.map(i => {
-        return type + i
+        return i
     })
 }
