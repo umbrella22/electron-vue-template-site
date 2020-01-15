@@ -30,7 +30,8 @@ function genEssentialsSidebar() {
     const mapArr = [
         '/Overview/',
         '/Overview/essentials/',
-        '/Overview/essentials/renderer-process.md'
+        '/Overview/essentials/renderer-process.md',
+        '/Overview/essentials/build.md'
     ]
     return mapArr.map(i => {
         return i
