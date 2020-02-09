@@ -1,5 +1,5 @@
 module.exports = {
-    base:'/electrn-vue-template-doc/',
+    base:'/electron-vue-template-doc/',
     title: "electron-vue-template-doc",
     description: "基于vue来构建一个electron应用程序",
     markdown: {
