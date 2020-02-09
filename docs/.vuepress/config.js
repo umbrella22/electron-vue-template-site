@@ -12,7 +12,7 @@ module.exports = {
             { text: 'Github', link: 'https://github.com/umbrella22/electron-vue-template' },
         ],
         sidebar: {
-            '/Overview': [
+            '/Overview/': [
                 {
                     title: '基础',
                     collapsable: false,
