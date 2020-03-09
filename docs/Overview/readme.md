@@ -8,6 +8,7 @@
 
 起手该项目的缘由是因为[原项目](https://github.com/SimulatedGREG/electron-vue)已经停止维护了很久，electron的版本号还停滞在1.x版本，所以就在原项目的基础上更新了所有依赖，并且融入了[花裤衩大大的vue-admin](https://panjiachen.github.io/vue-element-admin-site/zh/)的核心代码以及融入了我自己的一些代码。同时如果您打算使用这些核心代码的话，还请希望结合该教程。内置了nedb，两种electron自动更新，自定义头部等大家几乎经常用到的功能；相信在基础需求面前，本项目能够最大程度的帮助你
 ::: warning 提示
+本文档对应GitHub中的第二个分支，master将会再不久迁移同第二个分支。
 阅读本文档即默认您拥有前端以及vue基础知识，并拥有部分node基础知识。
 :::
 
