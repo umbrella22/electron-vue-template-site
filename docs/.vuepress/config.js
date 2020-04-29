@@ -44,7 +44,8 @@ function genAdvancedSidebar() {
         '/Overview/advanced/',
         '/Overview/advanced/RouteLazyLoading.md',
         '/Overview/advanced/ffi.md',
-        '/Overview/advanced/webpack.md'
+        '/Overview/advanced/webpack.md',
+        '/Overview/advanced/moreWin.md'
     ]
     return mapArr.map(i => {
         return i
