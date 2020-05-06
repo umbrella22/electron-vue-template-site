@@ -14,7 +14,7 @@ touch .nojekyll
 
 git init
 git add -A
-git commit -m 'deploy'
+git commit -m '自动更新'
 
 git push -f "https://${access_token}@github.com/umbrella22/electron-vue-template-doc.git" master:gh-pages
 
