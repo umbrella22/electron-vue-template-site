@@ -16,6 +16,6 @@ git init
 git add -A
 git commit -m 'deploy'
 
-git push -f "https://github.com/umbrella22/electron-vue-template-doc.git" master:gh-pages
+git push -f "https://${access_token}@github.com/umbrella22/electron-vue-template-doc.git" master:gh-pages
 
 cd -
