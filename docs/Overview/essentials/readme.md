@@ -6,7 +6,11 @@
    └─main                      # 主进程目录
       ├─config                 # 主进程配置文件夹
       │    ├─DisableButton.js  # 配置全局快捷键禁用
-      │    └─menu.js           # 主进程的自定义菜单
+      │    ├─menu.js           # 主进程的自定义菜单
+      │    └─StaticPath.js     # 存放静态地址
+      ├─server                 # 内置服务端文件夹
+      │    ├─index.js          # 内置服务端入口
+      │    └─server.js         # 内置服务端本体
       ├─services               # 主进程服务文件夹
       │    ├─checkupdate.js    # electron-updater更新
       │    ├─downloadFile.js   # webContents类更新
@@ -51,18 +55,8 @@ import setIpc from './ipcMain'
 import electronDevtoolsInstaller, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 import upload from './checkupdate'
 import DownloadUpdate from './downloadFile'
-import path from 'path'
+import { winURL, loadingURL } from '../config/StaticPath'
 
-/**
- * Set `__static` path to static files in production
- * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
- */
-if (process.env.NODE_ENV !== 'development') {
-  global.__static = path.join(__dirname, '/static').replace(/\\/g, '\\\\')
-}
-// 文件地址
-const winURL = process.env.NODE_ENV === 'development' ? `http://localhost:${process.env.PORT}` : `file://${__dirname}/index.html`
-const loadingURL = process.env.NODE_ENV === 'development' ? `http://localhost:${process.env.PORT}/static/loader.html` : `file://${__static}/loader.html`
 var loadWindow = null
 var mainWindow = null
 
@@ -198,10 +192,27 @@ download-error|无|无|主进程发送通讯，下载失败时触发，向渲染
 - checkupdate中参数说明
 只有一个向渲染进程发送UpdateMsg，参数为object，内包含一个state和msg；其中state中的值为：-1 检查更新失败 0 正在检查更新 1 检测到新版本，准备下载 2 未检测到新版本 3 下载中 4 下载完成；当触发到4状态时，此时主进程中监听confirm-update，使用该名称即可触发重启更新功能。
 
+### server
+
+::: tip 说明
+通过http模块加载express，并且支持自定义端口，启动的服务端并不会阻塞electron的主进程or渲染进程，是一个独立的node进程，只要是正常express可以处理的它均可以处理，并且当本机防火墙允许时，它还可以充当一个服务器。
+:::
+
+- index.js
+
+此文件内如果没有什么特殊需求，无需改动，内包含启动服务器和关闭服务器两个方法。
+
+- server.js
+
+此文件为express本体，这里存放着express接口，以及其他的逻辑代码，当然，这里我只是写了两个并不那么规范的接口例子，当然这里不推荐讲业务代码和接口代码全部塞在这一个文件里，
+你可以自行分文件夹也好分文件也好，这些操作权就交给屏幕外的你了；请不要忘记它是一个拥有node功能完整的express服务端，所以请不要有所顾忌~
+
 ### ipcMain.js
-这里没啥好说的，这里面的话就是小封装了一个提示弹窗，一个错误弹窗，以及一些自定义头部需要调用到的窗口大小变化。
+这里面是封装了一个提示弹窗，一个错误弹窗，以及一些自定义头部需要调用到的窗口大小变化；以及开启内置服务端和第三方窗口
 ```javascript
 import { ipcMain, dialog } from 'electron'
+import Server from '../server/index'
+import { winURL } from '../config/StaticPath'
 export default {
   Mainfunc (mainWindow, IsUseSysTitle) {
     ipcMain.on('IsUseSysTitle', (event) => {
@@ -240,6 +251,62 @@ export default {
         arg.title,
         arg.message
       )
+    })
+    ipcMain.on('statr-server', (event, arg) => {
+      Server.StatrServer().then(res => {
+        event.reply('confirm-start', res)
+      }).catch(err => {
+        dialog.showErrorBox(
+          '错误',
+          err
+        )
+      })
+    })
+    ipcMain.on('stop-server', (event, arg) => {
+      Server.StopServer().then(res => {
+        event.reply('confirm-stop', res)
+      }).catch(err => {
+        dialog.showErrorBox(
+          '错误',
+          err
+        )
+      })
+    })
+    ipcMain.on('open-win', (event, arg) => {
+      const ChildWin = new BrowserWindow({
+        height: 595,
+        useContentSize: true,
+        width: 842,
+        autoHideMenuBar: true,
+        minWidth: 842,
+        show: false,
+        webPreferences: {
+          nodeIntegration: true,
+          webSecurity: false,
+          // 如果是开发模式可以使用devTools
+          devTools: process.env.NODE_ENV === 'development',
+          // devTools: true,
+          // 在macos中启用橡皮动画
+          scrollBounce: process.platform === 'darwin'
+        }
+      })
+      ChildWin.loadURL(winURL + `#${arg.url}`)
+      ChildWin.webContents.once('dom-ready', () => {
+        ChildWin.show()
+        ChildWin.webContents.send('send-data', arg.sendData)
+        if (arg.IsPay) {
+          // 检查支付时候自动关闭小窗口
+          const testUrl = setInterval(() => {
+            const Url = ChildWin.webContents.getURL()
+            if (Url.includes(arg.PayUrl)) {
+              ChildWin.close()
+            }
+          }, 1200)
+          ChildWin.on('close', () => {
+            clearInterval(testUrl)
+          })
+        }
+      })
     })
   }
 }
