@@ -1,5 +1,6 @@
 module.exports = {
-    title: "electron-vue-template",
+    base:'/electron-vue-template-doc/',
+    title: "electron-vue-template-doc",
     description: "基于vue来构建一个electron应用程序",
     markdown: {
         lineNumbers: true
@@ -11,7 +12,7 @@ module.exports = {
             { text: 'Github', link: 'https://github.com/umbrella22/electron-vue-template' },
         ],
         sidebar: {
-            '/Overview': [
+            '/Overview/': [
                 {
                     title: '基础',
                     collapsable: false,
@@ -43,7 +44,8 @@ function genAdvancedSidebar() {
         '/Overview/advanced/',
         '/Overview/advanced/RouteLazyLoading.md',
         '/Overview/advanced/ffi.md',
-        '/Overview/advanced/webpack.md'
+        '/Overview/advanced/webpack.md',
+        '/Overview/advanced/moreWin.md'
     ]
     return mapArr.map(i => {
         return i

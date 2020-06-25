@@ -4,6 +4,8 @@
 需要注意的是，无论哪一个平台在编译的时候，都会下载一次打包依赖，当然这只会在你第一次构建项目时发生。
 本项目只提供了win平台的打包依赖，在build/lib文件夹中，使用方法在压缩包内，自己看~
 :::
+## 构建出web版本
+当您使用yarn build:web或npm run build:web时，您应当注意的是，在web环境下是不可以存在任何和electron相关得api调用，您可以在前端中通过`process.env.IS_WEB`来判断当前运行环境是否处于非electron。
 ## 环境变量
 在本项目中，已经在config/index.js中导入了两个状态，dev为开发环境，prod为生产环境，而axios的baseURL同样也是出于该文件夹中的dev.env.js和prod.env.js中，而在index中，您应当遵守内部的文件结构进行您自己的一些变量控制，本项目自带的有在dev下的默认端口，关闭electron垃圾信息输出，以及，控制台部分输出中文化（笑~）
 
