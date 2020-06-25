@@ -16,8 +16,6 @@
 ```
 - 登录（假）
 
-- 数据库的增删改查
-
 - 使用electron-updater进行更新检查
 
 - 使用electron的webContents类进行下载
@@ -44,7 +42,11 @@
 │  ├─main                      # 主进程目录
 │  │  ├─config                 # 主进程配置文件夹
 │  │  │    ├─DisableButton.js  # 配置全局快捷键禁用
+│  │  │    ├─StaticPath.js     # 静态路径文件
 │  │  │    └─menu.js           # 主进程的自定义菜单
+│  │  ├─server                 # 内置服务端文件夹
+│  │  │    ├─index.js          # 内置服务端启动
+│  │  │    └─server.js         # 内置服务端主体
 │  │  ├─services               # 主进程服务文件夹
 │  │  │    ├─checkupdate.js    # electron-updater更新
 │  │  │    ├─downloadFile.js   # webContents类更新
@@ -93,7 +95,6 @@ npm install --registry=https://registry.npm.taobao.org
 npm config edit
 # 该命令会打开npm的配置文件，请在registry=https://registry.npm.taobao.org/下一行添加
 # electron_mirror=https://cdn.npm.taobao.org/dist/electron/ 
-# sass_binary_site=https://npm.taobao.org/mirrors/node-sass/
 # 然后关闭该窗口，重启命令行，删除node_modules文件夹，并重新安装依赖即可
 # 本地开发 启动项目
 npm run dev 或 yarn dev

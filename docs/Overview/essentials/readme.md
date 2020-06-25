@@ -6,7 +6,11 @@
    └─main                      # 主进程目录
       ├─config                 # 主进程配置文件夹
       │    ├─DisableButton.js  # 配置全局快捷键禁用
+      │    ├─StaticPath.js     # 静态路径文件
       │    └─menu.js           # 主进程的自定义菜单
+      ├─server                 # 内置服务端文件夹
+      │    ├─index.js          # 内置服务端启动
+      │    └─server.js         # 内置服务端主体
       ├─services               # 主进程服务文件夹
       │    ├─checkupdate.js    # electron-updater更新
       │    ├─downloadFile.js   # webContents类更新
@@ -51,18 +55,8 @@ import setIpc from './ipcMain'
 import electronDevtoolsInstaller, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 import upload from './checkupdate'
 import DownloadUpdate from './downloadFile'
-import path from 'path'
+import { winURL, loadingURL } from '../config/StaticPath'
 
-/**
- * Set `__static` path to static files in production
- * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
- */
-if (process.env.NODE_ENV !== 'development') {
-  global.__static = path.join(__dirname, '/static').replace(/\\/g, '\\\\')
-}
-// 文件地址
-const winURL = process.env.NODE_ENV === 'development' ? `http://localhost:${process.env.PORT}` : `file://${__dirname}/index.html`
-const loadingURL = process.env.NODE_ENV === 'development' ? `http://localhost:${process.env.PORT}/static/loader.html` : `file://${__static}/loader.html`
 var loadWindow = null
 var mainWindow = null
 
@@ -83,6 +77,7 @@ function createMainWindow () {
       webSecurity: false,
       // 如果是开发模式可以使用devTools
       devTools: process.env.NODE_ENV === 'development',
+      // devTools: true,
       // 在macos中启用橡皮动画
       scrollBounce: process.platform === 'darwin'
     }
@@ -101,32 +96,29 @@ function createMainWindow () {
   // 载入菜单
   const menu = Menu.buildFromTemplate(menuconfig)
   Menu.setApplicationMenu(menu)
-  // 加载页面  
   mainWindow.loadURL(winURL)
-  // 设置ipc
+
   setIpc.Mainfunc(mainWindow, config.IsUseSysTitle)
-  // 加载更新方法
   upload.Update(mainWindow)
   DownloadUpdate.download(mainWindow)
-  // 当处于开发环境时，加载vue-devtools
+
   if (process.env.NODE_ENV === 'development') {
-    //   主窗口就绪之后，打开主窗口，关闭加载窗口
     mainWindow.webContents.once('dom-ready', () => {
       mainWindow.show()
       electronDevtoolsInstaller(VUEJS_DEVTOOLS)
         .then((name) => console.log(`installed: ${name}`))
         .catch(err => console.log('Unable to install `vue-devtools`: \n', err))
-      loadWindow.destroy()
     })
-    // 自动打开devtools窗口
+    if (config.UseStartupChart) loadWindow.destroy()
+
     mainWindow.webContents.openDevTools(true)
   } else {
     mainWindow.webContents.once('dom-ready', () => {
       mainWindow.show()
-      loadWindow.destroy()
+      if (config.UseStartupChart) loadWindow.destroy()
     })
   }
-    // 当主窗口关闭时，释放资源
+
   mainWindow.on('closed', () => {
     mainWindow = null
   })
@@ -138,7 +130,9 @@ function loadindWindow () {
     height: 600,
     frame: false,
     backgroundColor: '#222',
+    skipTaskbar: true,
     transparent: true,
+    resizable: false,
     webPreferences: { experimentalFeatures: true }
   })
 
@@ -149,8 +143,8 @@ function loadindWindow () {
   setTimeout(() => {
     createMainWindow()
   }, 2000)
-    // 资源释放
-    loadWindow.on('closed', () => {
+
+  loadWindow.on('closed', () => {
     loadWindow = null
   })
 }
@@ -163,6 +157,7 @@ function initWindow () {
   }
 }
 export default initWindow
+
 
 ```
 ::: tip 提示
@@ -199,50 +194,110 @@ download-error|无|无|主进程发送通讯，下载失败时触发，向渲染
 只有一个向渲染进程发送UpdateMsg，参数为object，内包含一个state和msg；其中state中的值为：-1 检查更新失败 0 正在检查更新 1 检测到新版本，准备下载 2 未检测到新版本 3 下载中 4 下载完成；当触发到4状态时，此时主进程中监听confirm-update，使用该名称即可触发重启更新功能。
 
 ### ipcMain.js
-这里没啥好说的，这里面的话就是小封装了一个提示弹窗，一个错误弹窗，以及一些自定义头部需要调用到的窗口大小变化。
+这里没啥好说的，这里面的话就是小封装了一个提示弹窗，一个错误弹窗，以及一些自定义头部需要调用到的窗口大小变化还有打开新窗口的一些方法；此处的ipc我是用的是`handle`方法去接收而不是`on`方法，毕竟promise的好处多多。
 ```javascript
-import { ipcMain, dialog } from 'electron'
+import { ipcMain, dialog, BrowserWindow } from 'electron'
+import Server from '../server/index'
+import { winURL } from '../config/StaticPath'
+
 export default {
   Mainfunc (mainWindow, IsUseSysTitle) {
-    ipcMain.on('IsUseSysTitle', (event) => {
-      const data = IsUseSysTitle
-      event.reply('CisUseSysTitle', data)
+    ipcMain.handle('IsUseSysTitle', async () => {
+      return IsUseSysTitle
     })
-    ipcMain.on('windows-mini', () => {
+    ipcMain.handle('windows-mini', () => {
       mainWindow.minimize()
     })
-    ipcMain.on('window-max', (event) => {
+    ipcMain.handle('window-max', async () => {
       if (mainWindow.isMaximized()) {
-        event.reply('window-confirm', false)
         mainWindow.restore()
+        return { status: false }
       } else {
-        event.reply('window-confirm', true)
         mainWindow.maximize()
+        return { status: true }
       }
     })
-    ipcMain.on('window-close', () => {
+    ipcMain.handle('window-close', () => {
       mainWindow.close()
     })
-    // 参数说明见下表
-    ipcMain.on('open-messagebox', (event, arg) => {
-      dialog.showMessageBox(mainWindow, {
+    ipcMain.handle('open-messagebox', async (event, arg) => {
+      const res = await dialog.showMessageBox(mainWindow, {
         type: arg.type || 'info',
         title: arg.title || '',
         buttons: arg.buttons || [],
         message: arg.message || '',
         noLink: arg.noLink || true
-      }).then(res => {
-        event.reply('confirm-message', res)
       })
+      return res
     })
-    ipcMain.on('open-errorbox', (event, arg) => {
+    ipcMain.handle('open-errorbox', (event, arg) => {
       dialog.showErrorBox(
         arg.title,
         arg.message
       )
     })
+    ipcMain.handle('statr-server', async () => {
+      try {
+        const serveStatus = await Server.StatrServer()
+        console.log(serveStatus)
+        return serveStatus
+      } catch (error) {
+        dialog.showErrorBox(
+          '错误',
+          error
+        )
+      }
+    })
+    ipcMain.handle('stop-server', async (event, arg) => {
+      try {
+        const serveStatus = await Server.StopServer()
+        return serveStatus
+      } catch (error) {
+        dialog.showErrorBox(
+          '错误',
+          error
+        )
+      }
+    })
+    ipcMain.handle('open-win', (event, arg) => {
+      const ChildWin = new BrowserWindow({
+        height: 595,
+        useContentSize: true,
+        width: 842,
+        autoHideMenuBar: true,
+        minWidth: 842,
+        show: false,
+        webPreferences: {
+          nodeIntegration: true,
+          webSecurity: false,
+          // 如果是开发模式可以使用devTools
+          devTools: process.env.NODE_ENV === 'development',
+          // devTools: true,
+          // 在macos中启用橡皮动画
+          scrollBounce: process.platform === 'darwin'
+        }
+      })
+      ChildWin.loadURL(winURL + `#${arg.url}`)
+      ChildWin.webContents.once('dom-ready', () => {
+        ChildWin.show()
+        ChildWin.webContents.send('send-data', arg.sendData)
+        if (arg.IsPay) {
+          // 检查支付时候自动关闭小窗口
+          const testUrl = setInterval(() => {
+            const Url = ChildWin.webContents.getURL()
+            if (Url.includes(arg.PayUrl)) {
+              ChildWin.close()
+            }
+          }, 1200)
+          ChildWin.on('close', () => {
+            clearInterval(testUrl)
+          })
+        }
+      })
+    })
   }
 }
+
 
 ```
 - 弹窗参数说明
@@ -256,3 +311,4 @@ message|String|message box 的内容.
 noLink|Boolean|别问为啥是true，问就是自己设置成false试一试。 (´・ω・`)
 
 - DisableButton和menu就真的没啥好说的了，直接去项目中看代码就好，一个是注册全局快捷键禁用F12的示例一个是顶部菜单栏的示例。
+- StaticPath中存放的就都是一些渲染进程中的路径拉，将其从远地方剥离出来，还是为了方便维护。
