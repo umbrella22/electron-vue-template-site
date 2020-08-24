@@ -1,5 +1,5 @@
 module.exports = {
-    base:'/electron-vue-template-doc/',
+    base: '/electron-vue-template-doc/',
     title: "electron-vue-template-doc",
     description: "基于vue来构建一个electron应用程序",
     markdown: {
@@ -45,7 +45,8 @@ function genAdvancedSidebar() {
         '/Overview/advanced/RouteLazyLoading.md',
         '/Overview/advanced/ffi.md',
         '/Overview/advanced/webpack.md',
-        '/Overview/advanced/moreWin.md'
+        '/Overview/advanced/moreWin.md',
+        '/Overview/advanced/NoLayOut.md'
     ]
     return mapArr.map(i => {
         return i

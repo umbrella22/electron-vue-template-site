@@ -2,7 +2,7 @@
 借助强大得electron-bulider您只需要执行npm run build命令即可开始编译您当前操作系统适用的安装包
 :::tip 提示
 需要注意的是，无论哪一个平台在编译的时候，都会下载一次打包依赖，当然这只会在你第一次构建项目时发生。
-本项目只提供了win平台的打包依赖，在build/lib文件夹中，使用方法在压缩包内，自己看~
+本项目只提供了win平台的打包依赖，在[这里](https://gitee.com/Zh-Sky/HardToDownloadLib)文件夹中，使用方法在压缩包内，自己看~
 :::
 ## 构建出web版本
 当您使用yarn build:web或npm run build:web时，您应当注意的是，在web环境下是不可以存在任何和electron相关得api调用，您可以在前端中通过`process.env.IS_WEB`来判断当前运行环境是否处于非electron。
