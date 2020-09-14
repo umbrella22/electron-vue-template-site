@@ -98,6 +98,7 @@ npm install --registry=https://registry.npm.taobao.org
 npm config edit
 # 该命令会打开npm的配置文件，请在registry=https://registry.npm.taobao.org/下一行添加
 # electron_mirror=https://cdn.npm.taobao.org/dist/electron/ 
+# ELECTRON_BUILDER_BINARIES_MIRROR=http://npm.taobao.org/mirrors/electron-builder-binaries
 # 然后关闭该窗口，重启命令行，删除node_modules文件夹，并重新安装依赖即可
 # 本地开发 启动项目
 npm run dev 或 yarn dev
@@ -107,7 +108,6 @@ npm run dev 或 yarn dev
 
 一般遇到`Electron failed to install correctly，please delete node_moules/electron and try installing again`这种错误时，就是electron本体没有下载成功，删除node_module文件夹，并按照上面的设置进行electron镜像地址设置之后就好了
 
-同时本项目的css预处理器使用的时node-sass所以同样依赖python2.7的，如果你之前没有安装的话，需要自己去看一下哦
 :::
 
 ::: warning 注意
