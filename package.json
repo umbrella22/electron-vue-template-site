@@ -9,6 +9,6 @@
   "author": "sky <https://github.com/umbrella22>",
   "license": "ISC",
   "dependencies": {
-    "vuepress": "^1.5.3"
+    "vuepress": "^1.5.4"
   }
 }
