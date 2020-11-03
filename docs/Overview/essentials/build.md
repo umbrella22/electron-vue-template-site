@@ -2,7 +2,7 @@
 借助强大得electron-bulider您只需要执行npm run build命令即可开始编译您当前操作系统适用的安装包
 :::tip 提示
 需要注意的是，无论哪一个平台在编译的时候，都会下载一次打包依赖，当然这只会在你第一次构建项目时发生。
-本项目只提供了win平台的打包依赖，在[这里](https://gitee.com/Zh-Sky/HardToDownloadLib)文件夹中，使用方法在压缩包内，自己看~
+在设置过镜像以后，无需担心下载问题。
 :::
 ## 构建出web版本
 当您使用yarn build:web或npm run build:web时，您应当注意的是，在web环境下是不可以存在任何和electron相关得api调用，您可以在前端中通过`process.env.IS_WEB`来判断当前运行环境是否处于非electron。
@@ -73,6 +73,9 @@ IsUseSysTitle|Boolean|true|是否使用系统自带得标题栏
     }
   }
 ```
+:::tip 提示
+在win对象中，当前分支代码均剔除了arch对象，若您需要一次打包双位安装版，请自行添加。
+:::
 ## 发布时，减少打包后文件大小
 发布时您可能已经注意到安装包大小为40 - ∞ MB 因受限于chromium，安装包无法压缩到30M以下；所以安装包在30-50MB大小请勿惊慌，这是正常大小。
 

@@ -30,6 +30,7 @@ module.exports = {
 function genEssentialsSidebar() {
     const mapArr = [
         '/Overview/',
+        '/Overview/essentials/features.md',
         '/Overview/essentials/',
         '/Overview/essentials/renderer-process.md',
         '/Overview/essentials/build.md'

@@ -1,5 +1,5 @@
 # 渲染进程介绍
-::: tip
+::: tip 说明
 由于 Electron 使用 Chromium 显示网页，那么，Chromium 的多进程架构也被使用。Electron 中的每个网页都在自己的进程中运行，称为渲染器进程 (renderer process)。
 
 在正常的浏览器中，网页通常运行在沙盒封装化的环境中，并且不允许访问本机资源。然而，Electron 用户有权在网页中使用 Node.js 的 API，从而允许较低级别的操作系统交互。
