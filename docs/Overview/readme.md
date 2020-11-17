@@ -98,7 +98,7 @@ npm install --registry=https://registry.npm.taobao.org
 npm config edit
 # 该命令会打开npm的配置文件，请在registry=https://registry.npm.taobao.org/下一行添加
 # electron_mirror=https://cdn.npm.taobao.org/dist/electron/ 
-# ELECTRON_BUILDER_BINARIES_MIRROR=http://npm.taobao.org/mirrors/electron-builder-binaries
+# ELECTRON_BUILDER_BINARIES_MIRROR=http://npm.taobao.org/mirrors/electron-builder-binaries/
 # 然后关闭该窗口，重启命令行，删除node_modules文件夹，并重新安装依赖即可
 # 本地开发 启动项目
 npm run dev 或 yarn dev
