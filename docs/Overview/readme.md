@@ -3,7 +3,7 @@
 
 [![vue](https://img.shields.io/badge/vue-2.6.12-brightgreen.svg)](https://github.com/vuejs/vue)
 [![element-ui](https://img.shields.io/badge/element--ui-2.15.0-brightgreen.svg)](https://github.com/ElemeFE/element)
-[![electron](https://img.shields.io/badge/electron-9.3.5-brightgreen.svg)](https://github.com/ElemeFE/element)
+[![electron](https://img.shields.io/badge/electron-12.0.0-brightgreen.svg)](https://github.com/ElemeFE/element)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/umbrella22/electron-vue-template/blob/master/LICENSE)
 
 起手该项目的缘由是因为[原项目](https://github.com/SimulatedGREG/electron-vue)已经停止维护了很久，electron的版本号还停滞在1.x版本，所以就在原项目的基础上更新了所有依赖，并且融入了[花裤衩大大的vue-admin](https://panjiachen.github.io/vue-element-admin-site/zh/)的核心代码以及融入了我自己的一些代码。同时如果您打算使用这些核心代码的话，还请希望结合该教程。内置了nedb，两种electron自动更新，自定义头部等大家几乎经常用到的功能；相信在基础需求面前，本项目能够最大程度的帮助你
@@ -118,7 +118,8 @@ npm run dev 或 yarn dev
 ## 全局文件夹
 在本项目中内置了两个全局文件夹：
 - `__static`：在被打包成asar之后，依旧能够提供虚拟路径，一般满足静态文件访问。
-- `__lib`：无论是否启用asar，均提供一个实体的绝对路径，可在config文件夹中设置，详情请查看调用dll章节。
+- `__lib`：(渲染进程)无论是否启用asar，均提供一个实体的绝对路径，可在config文件夹中设置，详情请查看调用dll章节。
+- `process.env.libPath`：(主进程)无论是否启用asar，均提供一个实体的绝对路径，可在config文件夹中设置，详情请查看调用dll章节。
 
 ## Vue 生态圈
 

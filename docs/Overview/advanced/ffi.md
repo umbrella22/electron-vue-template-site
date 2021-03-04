@@ -63,4 +63,14 @@ npm install ffi-napi
   当您觉得`_lib`作为 dll 的全局文件夹变量不太好时，您可以去`.electron-vue/webpack.renderer.config.js`和`src/index.ejs`中搜索`__lib`关键词，并将其修改成你所喜欢的即可。但是这是极度不建议的，因为您并不知道这么做所带来的后果，他可能包括但不限于：打包之后 dll 调用失败，dll 位置丢失，dev 无法启动等一系列连锁反应
   :::
 
-- 但开发途中是绝对不会这么一帆风顺的，就我在摸索的时候，遇到的问题总结如下： - Q：控制台报错：`Uncaught Error: Dynamic Linking Error: Win32 error 126` - A：该报错是由于 dll 文件位置不对引起的，文件路径是否和上面一样，否则您需要使用绝对路径。 - Q：控制台报错：`Uncaught Error: Dynamic Linking Error: Win32 error 193` - A：dll 位数不对导致的，32 位 dll 只能给 32 位程序使用，64 位只能给 64 位程序使用，二者不可混合使用。 - Q：控制台报错：`Uncaught Error: Dynamic Linking Error: Win32 error 127` - A：该报错是由于在 js 中声明了 c++中没有的方法导致的，请注意 c++中暴漏的函数名；或者是当前 dll 引用了其他资源文件它没有加载成功。 - Q：控制台报错：`Uncaught Error: Dynamic Linking Error: Win32 error 1114` - A：该报错是在打包时，dll 释放位置错误，导致程序去 c 盘查找后无果得到的 dll 丢失错误。（后面会谈这个打包之后的 dll 问题） - Q：控制台报错：`Uncaught (in promise) Error: \\?\C:\Users\zhang\Desktop\electron-vue-template\node_modules\ref-napi\build\Release\binding.node is not a valid Win32 application. \\?\C:\Users\zhang\Desktop\electron-vue-template\node_modules\ref-napi\build\Release\binding.node` - A：这种错误通常出现在你打包过一次之后发生，此时你只需要去你的 node_modules/ffi-napi 文件夹内重新执行一次 npm install 或者 yarn install 即可解决。
+- 但开发途中是绝对不会这么一帆风顺的，就我在摸索的时候，遇到的问题总结如下：
+  - Q：控制台报错：`Uncaught Error: Dynamic Linking Error: Win32 error 126`
+  - A：该报错是由于 dll 文件位置不对引起的，文件路径是否和上面一样，否则您需要使用绝对路径。
+  - Q：控制台报错：`Uncaught Error: Dynamic Linking Error: Win32 error 193`
+  - A：dll 位数不对导致的，32 位 dll 只能给 32 位程序使用，64 位只能给 64 位程序使用，二者不可混合使用。
+  - Q：控制台报错：`Uncaught Error: Dynamic Linking Error: Win32 error 127`
+  - A：该报错是由于在 js 中声明了 c++中没有的方法导致的，请注意 c++中暴漏的函数名；或者是当前 dll 引用了其他资源文件它没有加载成功。
+  - Q：控制台报错：`Uncaught Error: Dynamic Linking Error: Win32 error 1114`
+  - A：该报错是在打包时，dll 释放位置错误，导致程序去 c 盘查找后无果得到的 dll 丢失错误。（后面会谈这个打包之后的 dll 问题）
+  - Q：控制台报错：`Uncaught (in promise) Error: \\?\C:\Users\%userName%\Desktop\electron-vue-template\node_modules\ref-napi\build\Release\binding.node is not a valid Win32 application. \\?\C:\Users\%userName%\Desktop\electron-vue-template\node_modules\ref-napi\build\Release\binding.node`
+  - A：这种错误通常出现在你打包过一次之后发生，此时你只需要去你的 node_modules/ffi-napi 文件夹内重新执行一次 npm install 或者 yarn install 即可解决。
