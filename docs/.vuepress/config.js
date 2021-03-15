@@ -2,13 +2,14 @@ module.exports = {
     base: '/electron-vue-template-doc/',
     title: "electron-vue-template-doc",
     description: "基于vue来构建一个electron应用程序",
-    markdown: {
-        lineNumbers: true
-    },
+    head: [
+        ['link', { rel: 'icon', href: '/logo.png' }]
+    ],
     themeConfig: {
         sidebarDepth: 4,
         nav: [
             { text: '首页', link: '/' },
+            { text: 'Gitee', link: 'https://gitee.com/Zh-Sky/electron-vue-template' },
             { text: 'Github', link: 'https://github.com/umbrella22/electron-vue-template' },
         ],
         sidebar: {
@@ -23,6 +24,15 @@ module.exports = {
                     children: genAdvancedSidebar()
                 }
             ]
+        }
+    },
+    markdown: {
+        lineNumbers: true,
+        /** @param {import('markdown-it')} md */
+        extendMarkdown: md => {
+            md.options.highlight = require('./markdown/highlight')(
+                md.options.highlight
+            )
         }
     }
 
@@ -47,7 +57,8 @@ function genAdvancedSidebar() {
         '/Overview/advanced/ffi.md',
         '/Overview/advanced/webpack.md',
         '/Overview/advanced/moreWin.md',
-        '/Overview/advanced/NoLayOut.md'
+        '/Overview/advanced/NoLayOut.md',
+        '/Overview/advanced/FrostedGlassWindow.md'
     ]
     return mapArr.map(i => {
         return i
