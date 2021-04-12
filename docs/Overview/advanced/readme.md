@@ -1,4 +1,4 @@
-### 跨域问题
+# 跨域问题
 >跨域：即触发了浏览器的同源策略即请求的时候出现： `Access to XMLHttpRequest at ***`
 ::: tip 
 针对跨域问题，这一点在electron中其实无需担心，理解跨域产生问题的前端小朋友们应当知道这是浏览器造成的，此时我们只需要在主进程创建窗口位置设置一个值即可（electron版本高于4.x.x）即webPreferences中的webSecurity选项

@@ -1,8 +1,10 @@
 ---
 home: true
 heroImage: /logo.png
-actionText: 开始探索吧 →
-actionLink: /Overview/
+actions:
+  - text: 开始探索吧 →
+    link: /Overview/
+    type: primary
 features:
 - title: 急速上手
   details: 借助vue的优势能够让只拥有前端基础不费太多的学习时间，生成桌面应用。

@@ -6,40 +6,46 @@ module.exports = {
         ['link', { rel: 'icon', href: '/logo.png' }]
     ],
     themeConfig: {
-        sidebarDepth: 4,
-        nav: [
-            { text: '首页', link: '/' },
-            { text: 'Gitee', link: 'https://gitee.com/Zh-Sky/electron-vue-template' },
-            { text: 'Github', link: 'https://github.com/umbrella22/electron-vue-template' },
-        ],
-        sidebar: {
-            '/Overview/': [
-                {
-                    title: '基础',
-                    collapsable: false,
-                    children: genEssentialsSidebar()
-                }, {
-                    title: '进阶',
-                    collapsable: false,
-                    children: genAdvancedSidebar()
-                }
-            ]
-        }
+        locales: {
+            '/': {
+                navbar: [
+                    { text: '首页', link: '/' },
+                    { text: 'Gitee', link: 'https://gitee.com/Zh-Sky/electron-vue-template' },
+                    { text: 'Github', link: 'https://github.com/umbrella22/electron-vue-template' },
+                ],
+                sidebar: {
+                    '/Overview/': [
+                        {
+                            text: '基础',
+                            isGroup: true,
+                            children: genEssentialsSidebar()
+                        },
+                        {
+                            text: '进阶',
+                            isGroup: true,
+                            children: genAdvancedSidebar()
+                        }
+                    ]
+                },
+
+                // 404 page
+                notFound: [
+                    '这里什么都没有',
+                    '我们怎么到这来了？',
+                    '这是一个 404 页面',
+                    '看起来我们进入了错误的链接',
+                    '啊嘞？看起来你进入了一个异次元页面'
+                ],
+                backToHome: '返回首页',
+            }
+
+        },
     },
-    markdown: {
-        lineNumbers: true,
-        /** @param {import('markdown-it')} md */
-        extendMarkdown: md => {
-            md.options.highlight = require('./markdown/highlight')(
-                md.options.highlight
-            )
-        }
-    }
 
 }
 function genEssentialsSidebar() {
     const mapArr = [
-        '/Overview/',
+        '/Overview/README.md',
         '/Overview/essentials/features.md',
         '/Overview/essentials/',
         '/Overview/essentials/renderer-process.md',
@@ -52,7 +58,7 @@ function genEssentialsSidebar() {
 
 function genAdvancedSidebar() {
     const mapArr = [
-        '/Overview/advanced/',
+        '/Overview/advanced/README.md',
         '/Overview/advanced/RouteLazyLoading.md',
         '/Overview/advanced/ffi.md',
         '/Overview/advanced/webpack.md',
