@@ -1,9 +1,9 @@
 
 # 介绍
 
-[![vue](https://img.shields.io/badge/vue-2.6.12-brightgreen.svg)](https://github.com/vuejs/vue)
-[![element-ui](https://img.shields.io/badge/element--ui-2.15.1-brightgreen.svg)](https://github.com/ElemeFE/element)
-[![electron](https://img.shields.io/badge/electron-12.0.1-brightgreen.svg)](https://github.com/ElemeFE/element)
+[![vue](https://img.shields.io/badge/vue-2.6.14-brightgreen.svg)](https://github.com/vuejs/vue)
+[![element-ui](https://img.shields.io/badge/element--ui-2.15.2-brightgreen.svg)](https://github.com/ElemeFE/element)
+[![electron](https://img.shields.io/badge/electron-13.1.2-brightgreen.svg)](https://github.com/ElemeFE/element)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/umbrella22/electron-vue-template/blob/master/LICENSE)
 
 起手该项目的缘由是因为[原项目](https://github.com/SimulatedGREG/electron-vue)已经停止维护了很久，electron的版本号还停滞在1.x版本，所以就在原项目的基础上更新了所有依赖，并且融入了[花裤衩大大的vue-admin](https://panjiachen.github.io/vue-element-admin-site/zh/)的核心代码以及融入了我自己的一些代码。同时如果您打算使用这些核心代码的话，还请希望结合该教程。内置了nedb，两种electron自动更新，自定义头部等大家几乎经常用到的功能；相信在基础需求面前，本项目能够最大程度的帮助你
@@ -121,6 +121,8 @@ npm run dev 或 yarn dev
 - `__lib`：(渲染进程)无论是否启用asar，均提供一个实体的绝对路径，可在config文件夹中设置，详情请查看调用dll章节。
 - `process.env.libPath`：(主进程)无论是否启用asar，均提供一个实体的绝对路径，可在config文件夹中设置，详情请查看调用dll章节。
 
+## 环境变量
+- `process.env.TERGET_ENV`：当且仅当再命令中设置了`cross-env TERGET_ENV=标识`才会生效，和`process.env.NODE_ENV`是分开管理的，您可以在`config/index`中自行导入当前变量可能代表的东西。您可以直接在渲染（主）进程中通过`process.env.TERGET_ENV`访问。
 ## Vue 生态圈
 
 **首先了解这些 vue 生态圈的东西，会对你上手本项目有很大的帮助。**
