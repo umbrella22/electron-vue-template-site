@@ -1,6 +1,6 @@
 # 多窗口
 在本框架中，Vue-router使用的是哈希模式，但当前模式下，无法进行像history模式那样随心所欲的通过url打开链接，让我们使用新建窗口url跳转大法失败了；这样就只能想一个其他办法了，那就是新建一个窗口，然后通过拼接的形式来进行url跳转，而且多窗口之间可共享localStorage。是不是很令人振奋，更令人激动的是，要启用该功能几乎不用做任何准备，只需要您在您需要开启的位置使用：
-```JavaScript
+```js
 // this.$ipcApi是封装好了的的ipcRenderer
       this.$ipcApi.send("open-win", {
         url:'/form/index'

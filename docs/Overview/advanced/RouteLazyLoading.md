@@ -1,5 +1,5 @@
 # 路由懒加载
-> 当打包构建应用时，JavaScript 包会变得非常大，影响页面加载。如果我们能把不同路由对应的组件分割成不同的代码块，然后当路由被访问的时候才加载对应组件，这样就更加高效了。[vue-router官网](https://router.vuejs.org/zh/guide/advanced/lazy-loading.html)
+> 当打包构建应用时，js 包会变得非常大，影响页面加载。如果我们能把不同路由对应的组件分割成不同的代码块，然后当路由被访问的时候才加载对应组件，这样就更加高效了。[vue-router官网](https://router.vuejs.org/zh/guide/advanced/lazy-loading.html)
 
 ::: tip 提示
 如何实现路由的懒加载在这里不做过多的阐述，在vue-router的官方文档中有着非常完美的解释，在这里我们需要说明的是为何在electron中要去实现路由懒加载

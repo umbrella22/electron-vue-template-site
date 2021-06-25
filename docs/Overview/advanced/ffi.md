@@ -33,7 +33,7 @@ npm install ffi-napi
   - 然后放置你的 dll 文件到你新创建的文件夹内重启一次，然后就可以按照一下方法进行调用了
   - 打包前，请去 package.json 文件找到`extraFiles`数组，并且在内填入你刚刚创建的文件夹名称，同样也是字符串
 
-  ```JavaScript
+  ```js
   // 调用
   import ffi from "ffi-napi"
 

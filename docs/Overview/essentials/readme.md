@@ -20,7 +20,7 @@
 ```
 ### index.js
 - index.js是主进程的入口，下载过官方demo并且熟悉vue的童靴都知道，这里和vue的main.js是一样的，均包含了整个进程初始化操作，但是在本项目中，其代码只有21行，因为~你们也看到啦，我将窗口初始化，进程间通讯，更新，菜单都分开存放在各个文件夹中，便于后期优化和更改。
-```javascript
+```js
 'use strict'
 // index中和官方demo差异不是很大
 import { app } from 'electron'
@@ -47,7 +47,7 @@ app.on('browser-window-created', () => {
 ```
 ### windowManager.js
 - services/windowManager.js中存放的则是对于窗口的自定义操作；在该项目中采用的是一个加载窗口作为加载展示，而当真正的窗口处于`dom-ready`的状态下关闭加载窗口站视真正的界面给用户使用。由于`dom-ready`状态的速度是取决于用户的硬盘读取速度，所以在代码中，我做了一个固定1.5s时长加载时间，让快到加载框都出不来的用户不会只看到一个闪现窗口。这个时间可以根据自身业务条件进行调整，个人建议0.5-1.5区间就好。
-```javascript
+```js
 import { BrowserWindow, Menu } from 'electron'
 import menuconfig from '../config/menu'
 import config from '@config'
@@ -210,7 +210,7 @@ download-error|无|无|主进程发送通讯，下载失败时触发，向渲染
 
 ### ipcMain.js
 这里没啥好说的，这里面的话就是小封装了一个提示弹窗，一个错误弹窗，以及一些自定义头部需要调用到的窗口大小变化还有打开新窗口的一些方法；此处的ipc我是用的是`handle`方法去接收而不是`on`方法，毕竟promise的好处多多。
-```javascript
+```js
 import { ipcMain, dialog, BrowserWindow } from 'electron'
 import Server from '../server/index'
 import { winURL } from '../config/StaticPath'
