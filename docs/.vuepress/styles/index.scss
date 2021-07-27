@@ -128,7 +128,6 @@
 
 // dark mode
 html.dark {
-  // brand colors
   --c-brand: #3aa675;
   --c-brand-light: #349469;
 
@@ -150,14 +149,20 @@ html.dark {
   // custom container colors
   --c-tip: #318a62;
   --c-warning: #ceab00;
-  --c-warning-bg: #7e755b;
+  --c-warning-bg: #353535;
   --c-warning-title: #ceac03;
-  --c-warning-text: #362e00;
+  --c-warning-text: #a8a8a8;
   --c-danger: #940000;
   --c-danger-bg: #806161;
   --c-danger-title: #610000;
   --c-danger-text: #3a0000;
   --c-details-bg: #323843;
+
+  // code blocks vars
+  --code-hl-bg-color: #363b46;
+
+  --loadingbar-background-color: #2c2b30;
+  --loadingbar-prospect-color: #ece5d8;
 
   // code blocks vars
   --code-hl-bg-color: #363b46;
@@ -174,94 +179,63 @@ html.dark .DocSearch {
     0 -4px 8px 0 rgba(0, 0, 0, 0.2);
 }
 
-:lang(cs) {
-  quotes: "â€ž""â€œ"
-}
-
-:lang(de) {
-  quotes: "â€ž""â€œ"
-}
-
-:lang(de-CH) {
-  quotes: "Â«Â ""Â Â»"
-}
-
-:lang(fr) {
-  quotes: "Â«Â ""Â Â»"
-}
-
-:lang(es-ES) {
-  quotes: "Â«""Â»"
-}
-
-:lang(hu) {
-  quotes: "â€ž""â€œ"
-}
-
-:lang(ja-JP) {
-  quotes: "ã€Œ""ã€"
-}
-
-:lang(no-NO) {
-  quotes: "Â«""Â»"
-}
-
-:lang(pl) {
-  quotes: "â€ž""â€œ"
-}
-
-:lang(ru) {
-  quotes: "Â« "" Â»"
-}
-
-:lang(zh) {
-  quotes: "ã€Œ""ã€"
-}
-
-:lang(zh-CN) {
-  quotes: "â€œ""â€"
-}
-
-:lang(ja),
-:lang(ko),
-:lang(th),
-:lang(zh) {
-  font-style: normal;
-}
-
-:lang(ko) {
-  word-break: break-all;
-}
-
 :root {
   scroll-behavior: smooth; // 平滑滚动
 }
 
-img.logo{
+img.logo {
   border-radius: 5px;
 }
 
-.hero>img{
+.hero>img {
   border-radius: 26px;
 }
 
-::selection{color:#fff;background-color:#1890ff}
-:-webkit-scrollbar{width:10px;height:10px}
-::-webkit-scrollbar-corner{background:none}
-::-webkit-scrollbar-thumb{background-color:#ccc;border:3px solid transparent;background-clip:padding-box;border-radius:5px}
-::-webkit-scrollbar-track{opacity:0}
-::-webkit-scrollbar-thumb:hover{background-color:#686868;outline-offset:-1px}
-.icon{vertical-align:-0.15em;fill:currentColor;overflow:hidden}
+::selection {
+  color: #fff;
+  background-color: #1890ff
+}
 
-@media (min-width: 1024px){
-  :root{
+:-webkit-scrollbar {
+  width: 10px;
+  height: 10px
+}
+
+::-webkit-scrollbar-corner {
+  background: none
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border: 3px solid transparent;
+  background-clip: padding-box;
+  border-radius: 5px
+}
+
+::-webkit-scrollbar-track {
+  opacity: 0
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #686868;
+  outline-offset: -1px
+}
+
+.icon {
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden
+}
+
+@media (min-width: 1024px) {
+  :root {
     --content-width: 840px;
   }
 }
+
 // .custom-container.warning{
 //     position: relative;
 //     .warning-icon{
 //         background-image: url("/images/icons/danger.svg");
 //     }
 // }
-
