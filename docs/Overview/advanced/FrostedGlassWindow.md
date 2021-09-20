@@ -20,6 +20,10 @@ npm install ffi-napi ref-napi ref-struct-napi -S
 
 ```js
 // 新建一个名为maobili的js，内容为
+/**
+ * power by 猫猫头(864736317)
+ */
+// 都需要安装一次
 import ffi from "ffi-napi";
 import ref from "ref-napi";
 import struct from "ref-struct-napi";
@@ -39,14 +43,30 @@ const WindowCompositionAttributeData = struct({
 });
 
 const accent = new AccentPolicy();
-accent.AccentState = 3;
-accent.GradientColor = 0;
+// 颜色类型0-6
+/**
+ * ACCENT_DISABLED=0，禁用
+ * ACCENT_ENABLE_GRADIENT=1，不透明，可以设置颜色
+ * ACCENT_ENABLE_TRANSPARENT_GRADIENT=2，只透明，可以设置颜色
+ * ACCENT_ENABLE_BLUR_BEHIND=3，毛玻璃，无法设置颜色
+ * ACCENT_ENABLE_ACRYLIC_BLUR_BEHIND=4，毛玻璃可以设置颜色但是窗口不可移动并无法拖动大小
+ * ACCENT_ENABLE_HOST_BACKDROP=5， // 必须win10 1809以上才可以使用
+ * ACCENT_INVALID_STATE= 6 非法6及其以上
+ */
+// 但是这里其实通常是可以设置成3，然后通过css带上rgba通道来实现着色效果，
+// 唯一的区别就是，它的模糊程度不如4
+accent.AccentState = 4;
+// 颜色值
+// 255<<0|1<<8|2<<16|100<<24
+// 其中255 1 2 100为rgba值，0 8 16 24是固定
+accent.GradientColor = (34 << 0) | (34 << 8) | (34 << 16) | (0 << 24);
 
 const windowcompositon = new WindowCompositionAttributeData();
 windowcompositon.Attribute = 19;
 windowcompositon.Data = accent.ref();
 windowcompositon.SizeOfData = accent.ref().byteLength;
 
+// 传入参数，窗口句柄id和颜色设置参数
 const user32 = new ffi.Library("user32", {
   SetWindowCompositionAttribute: [
     INT,

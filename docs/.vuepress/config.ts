@@ -72,6 +72,7 @@ function genAdvancedSidebar() {
     "/Overview/advanced/moreWin.md",
     "/Overview/advanced/NoLayOut.md",
     "/Overview/advanced/FrostedGlassWindow.md",
+    "/Overview/advanced/hotUpdate.md"
   ];
   return mapArr.map((i) => {
     return i;
