@@ -31,7 +31,7 @@ IsUseSysTitle|Boolean|true|是否使用系统自带得标题栏
       }
     ],
     "productName": "electron-vue-admin",
-    "appId": "org.simulatedgreg.electron-vue",
+    "appId": "org.Sky.electron-vue",
     "directories": {
       "output": "build"
     },

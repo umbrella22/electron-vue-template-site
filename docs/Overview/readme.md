@@ -6,11 +6,12 @@
 [![electron](https://img.shields.io/badge/electron-13.1.2-brightgreen.svg)](https://github.com/ElemeFE/element)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/umbrella22/electron-vue-template/blob/master/LICENSE)
 
-起手该项目的缘由是因为[原项目](https://github.com/SimulatedGREG/electron-vue)已经停止维护了很久，electron的版本号还停滞在1.x版本，所以就在原项目的基础上更新了所有依赖，并且融入了[花裤衩大大的vue-admin](https://panjiachen.github.io/vue-element-admin-site/zh/)的核心代码以及融入了我自己的一些代码。同时如果您打算使用这些核心代码的话，还请希望结合该教程。内置了nedb，两种electron自动更新，自定义头部等大家几乎经常用到的功能；相信在基础需求面前，本项目能够最大程度的帮助你
+起手该项目的缘由是因为[原项目](https://github.com/SimulatedGREG/electron-vue)已经停止维护了很久，electron的版本号还停滞在1.x版本，所以就在原项目的基础上更新了所有依赖，并且融入了[花裤衩大大的vue-admin](https://panjiachen.github.io/vue-element-admin-site/zh/)的核心代码以及融入了我自己的一些代码。同时如果您打算使用这些核心代码的话，还请希望结合该教程。两种electron自动更新，自定义头部等大家几乎经常用到的功能；相信在基础需求面前，本项目能够最大程度的帮助你
 ::: warning 提示
 阅读本文档即默认您拥有前端以及vue基础知识，并拥有部分node基础知识。
-:::
 
+**并确保您的 node 环境是大于或等于 14**
+:::
 ## 功能
 
 ```
@@ -89,22 +90,19 @@ git clone https://github.com/umbrella22/electron-vue-template.git
 cd electron-vue-template
 # 安装依赖
 # 如果网络非常顺畅的情况下
-npm install
-# 如果网络出现一定的情况
-# 建议不要使用cnpm，会出现各种玄学bug。您可以通过如下操作加快安装速度
-npm install --registry=https://registry.npm.taobao.org
-# 但是需要注意的是electron的本体下载并不是走这里所以还是要去设置一下
+yarn install
+# 如果网络出现不稳定的情况时
 npm config edit
-# 该命令会打开npm的配置文件，请在空白处添加
+# 该命令会打开npm的配置文件，请在空白处添加 请自行去除下面三行前的＃号
 # registry=https://registry.npm.taobao.org/
 # electron_mirror=https://cdn.npm.taobao.org/dist/electron/ 
 # ELECTRON_BUILDER_BINARIES_MIRROR=http://npm.taobao.org/mirrors/electron-builder-binaries/
 # 然后关闭该窗口，重启命令行，删除node_modules文件夹，并重新安装依赖即可
 # 本地开发 启动项目
-npm run dev 或 yarn dev
+yarn dev
 ```
 ::: danger 注意
-强烈建议不要直接使用cnpm进行安装，那种玄学bug是真的没法说，最好就是用nrm切换一下registry，或者使用yarn，是最好的了。
+强烈建议不要直接使用cnpm进行安装，由于软链接带来的玄学bug是真的没法说，最好就是用nrm切换一下registry，或者使用yarn，是最好的了。
 
 一般遇到`Electron failed to install correctly，please delete node_moules/electron and try installing again`这种错误时，就是electron本体没有下载成功，删除node_module文件夹，并按照上面的设置进行electron镜像地址设置之后就好了
 
