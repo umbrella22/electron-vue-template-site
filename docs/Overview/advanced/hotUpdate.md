@@ -4,7 +4,7 @@
 :::
 
 - hotPublishUrl为完整的url,比如`https://www.xxxxx.com` 
-- hotPublishConfigName则是拼接在url后面的文件名称，完整示例`https://www.xxxxx.com/updater.json`；其中`updater`为hotPublishConfigName
+- hotPublishConfigName则是拼接在url后面的文件名称，完整示例`https://www.xxxxx.com/update-config.json`；其中`update-config`为hotPublishConfigName
 
 ## 需要一个能够无权限访问得地址。
 

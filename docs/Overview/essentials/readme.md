@@ -22,45 +22,62 @@
 - index.js是主进程的入口，下载过官方demo并且熟悉vue的童靴都知道，这里和vue的main.js是一样的，均包含了整个进程初始化操作，但是在本项目中，其代码只有21行，因为~你们也看到啦，我将窗口初始化，进程间通讯，更新，菜单都分开存放在各个文件夹中，便于后期优化和更改。
 ```js
 'use strict'
-// index中和官方demo差异不是很大
+
 import { app } from 'electron'
 import initWindow from './services/windowManager'
 import DisableButton from './config/DisableButton'
-// 初始化函数
+import electronDevtoolsInstaller, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
+
 function onAppReady () {
   initWindow()
   DisableButton.Disablef12()
-}
-// 通过isReady方法去启动整个窗口
-app.isReady() ? onAppReady() : app.on('ready', onAppReady)
-// 当检查到所有窗口都关闭时，就关闭软件
-app.on('window-all-closed', () => {
-    // 这里其实个人觉得。没太大必要，虽然这样处理和macos软件行为很类似
-  if (process.platform !== 'darwin') {
-    app.quit()
+  if (process.env.NODE_ENV === 'development') {
+    electronDevtoolsInstaller(VUEJS_DEVTOOLS)
+      .then((name) => console.log(`installed: ${name}`))
+      .catch(err => console.log('Unable to install `vue-devtools`: \n', err))
   }
+}
+//禁止程序多开，此处需要单例锁的同学打开注释即可
+// const gotTheLock = app.requestSingleInstanceLock()
+// if(!gotTheLock){
+//   app.quit()
+// }
+app.isReady() ? onAppReady() : app.on('ready', onAppReady)
+// 解决9.x跨域异常问题
+app.commandLine.appendSwitch('disable-features', 'OutOfBlinkCors')
+
+app.on('window-all-closed', () => {
+  // 所有平台均为所有窗口关闭就退出软件
+  app.quit()
 })
-// 监听新建窗口事件
 app.on('browser-window-created', () => {
   console.log('window-created')
 })
+// 注册协议
+if (process.defaultApp) {
+  if (process.argv.length >= 2) {
+    app.removeAsDefaultProtocolClient('electron-vue-template')
+    console.log('有于框架特殊性开发环境下无法使用')
+  }
+} else {
+  app.setAsDefaultProtocolClient('electron-vue-template')
+}
 ```
 ### windowManager.js
 - services/windowManager.js中存放的则是对于窗口的自定义操作；在该项目中采用的是一个加载窗口作为加载展示，而当真正的窗口处于`dom-ready`的状态下关闭加载窗口站视真正的界面给用户使用。由于`dom-ready`状态的速度是取决于用户的硬盘读取速度，所以在代码中，我做了一个固定1.5s时长加载时间，让快到加载框都出不来的用户不会只看到一个闪现窗口。这个时间可以根据自身业务条件进行调整，个人建议0.5-1.5区间就好。
 ```js
-import { BrowserWindow, Menu } from 'electron'
+import { BrowserWindow, Menu, app } from 'electron'
+import { platform } from "os"
 import menuconfig from '../config/menu'
 import config from '@config'
 import setIpc from './ipcMain'
-import electronDevtoolsInstaller, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
-import upload from './checkupdate'
-import DownloadUpdate from './downloadFile'
 import { winURL, loadingURL } from '../config/StaticPath'
 
 var loadWindow = null
 var mainWindow = null
+setIpc.Mainfunc(config.IsUseSysTitle)
 
-function createMainWindow () {
+function createMainWindow() {
   /**
    * Initial window options
    */
@@ -71,8 +88,9 @@ function createMainWindow () {
     minWidth: 1366,
     show: false,
     frame: config.IsUseSysTitle,
-    titleBarStyle: 'hidden',
+    titleBarStyle: platform().includes('win32') ? 'default' : 'hidden',
     webPreferences: {
+      contextIsolation: false,
       nodeIntegration: true,
       webSecurity: false,
       // 如果是开发模式可以使用devTools
@@ -98,33 +116,21 @@ function createMainWindow () {
   Menu.setApplicationMenu(menu)
   mainWindow.loadURL(winURL)
 
-  setIpc.Mainfunc(mainWindow, config.IsUseSysTitle)
-  upload.Update(mainWindow)
-  DownloadUpdate.download(mainWindow)
 
-  if (process.env.NODE_ENV === 'development') {
-    mainWindow.webContents.once('dom-ready', () => {
-      mainWindow.show()
-      electronDevtoolsInstaller(VUEJS_DEVTOOLS)
-        .then((name) => console.log(`installed: ${name}`))
-        .catch(err => console.log('Unable to install `vue-devtools`: \n', err))
-    })
+  mainWindow.webContents.once('dom-ready', () => {
     if (config.UseStartupChart) loadWindow.destroy()
+    mainWindow.show()
+  })
 
-    mainWindow.webContents.openDevTools(true)
-  } else {
-    mainWindow.webContents.once('dom-ready', () => {
-      mainWindow.show()
-      if (config.UseStartupChart) loadWindow.destroy()
-    })
-  }
+  if (process.env.NODE_ENV === 'development') mainWindow.webContents.openDevTools(true)
 
   mainWindow.on('closed', () => {
     mainWindow = null
+    app.quit();
   })
 }
 
-function loadindWindow () {
+function loadingWindow() {
   loadWindow = new BrowserWindow({
     width: 400,
     height: 600,
@@ -149,14 +155,15 @@ function loadindWindow () {
   })
 }
 
-function initWindow () {
+function initWindow() {
   if (config.UseStartupChart) {
-    return loadindWindow()
+    return loadingWindow()
   } else {
     return createMainWindow()
   }
 }
 export default initWindow
+
 
 
 ```
@@ -214,29 +221,41 @@ download-error|无|无|主进程发送通讯，下载失败时触发，向渲染
 import { ipcMain, dialog, BrowserWindow } from 'electron'
 import Server from '../server/index'
 import { winURL } from '../config/StaticPath'
+import downloadFile from './downloadFile'
+import Update from './checkupdate'
 
 export default {
-  Mainfunc (mainWindow, IsUseSysTitle) {
+  Mainfunc(IsUseSysTitle) {
+    const updater = new Update();
     ipcMain.handle('IsUseSysTitle', async () => {
       return IsUseSysTitle
     })
-    ipcMain.handle('windows-mini', () => {
-      mainWindow.minimize()
+    ipcMain.handle('windows-mini', (event, args) => {
+      BrowserWindow.fromWebContents(event.sender)?.minimize()
     })
-    ipcMain.handle('window-max', async () => {
-      if (mainWindow.isMaximized()) {
-        mainWindow.restore()
+    ipcMain.handle('window-max', async (event, args) => {
+      if (BrowserWindow.fromWebContents(event.sender)?.isMaximized()) {
+        BrowserWindow.fromWebContents(event.sender)?.unmaximize()
         return { status: false }
       } else {
-        mainWindow.maximize()
+        BrowserWindow.fromWebContents(event.sender)?.maximize()
         return { status: true }
       }
     })
-    ipcMain.handle('window-close', () => {
-      mainWindow.close()
+    ipcMain.handle('window-close', (event, args) => {
+      BrowserWindow.fromWebContents(event.sender)?.close()
+    })
+    ipcMain.handle('start-download', (event, msg) => {
+      downloadFile.download(BrowserWindow.fromWebContents(event.sender), msg.downloadUrL)
+    })
+    ipcMain.handle('check-update', () => {
+      updater.checkUpdate()
+    })
+    ipcMain.handle('confirm-update', () => {
+      updater.quitInstall()
     })
     ipcMain.handle('open-messagebox', async (event, arg) => {
-      const res = await dialog.showMessageBox(mainWindow, {
+      const res = await dialog.showMessageBox(BrowserWindow.fromWebContents(event.sender), {
         type: arg.type || 'info',
         title: arg.title || '',
         buttons: arg.buttons || [],
@@ -274,44 +293,86 @@ export default {
         )
       }
     })
+    let childWin = null;
+    let cidArray = [];
     ipcMain.handle('open-win', (event, arg) => {
-      const ChildWin = new BrowserWindow({
-        height: 595,
-        useContentSize: true,
-        width: 842,
-        autoHideMenuBar: true,
-        minWidth: 842,
-        show: false,
-        webPreferences: {
-          nodeIntegration: true,
-          webSecurity: false,
-          // 如果是开发模式可以使用devTools
-          devTools: process.env.NODE_ENV === 'development',
-          // devTools: true,
-          // 在macos中启用橡皮动画
-          scrollBounce: process.platform === 'darwin'
+      let cidJson = { id: null, url: '' }
+      let data = cidArray.filter((currentValue) => {
+        if (currentValue.url === arg.url) {
+          return currentValue
         }
       })
-      ChildWin.loadURL(winURL + `#${arg.url}`)
-      ChildWin.webContents.once('dom-ready', () => {
-        ChildWin.show()
-        ChildWin.webContents.send('send-data', arg.sendData)
-        if (arg.IsPay) {
-          // 检查支付时候自动关闭小窗口
-          const testUrl = setInterval(() => {
-            const Url = ChildWin.webContents.getURL()
-            if (Url.includes(arg.PayUrl)) {
-              ChildWin.close()
-            }
-          }, 1200)
-          ChildWin.on('close', () => {
-            clearInterval(testUrl)
-          })
-        }
-      })
+      if (data.length > 0) {
+        //获取当前窗口
+        let currentWindow = BrowserWindow.fromId(data[0].id)
+        //聚焦窗口
+        currentWindow.focus();
+      } else {
+        //获取主窗口ID
+        let parentID = event.sender.id
+        //创建窗口
+        childWin = new BrowserWindow({
+          width: arg?.width || 842,
+          height: arg?.height || 595,
+          //width 和 height 将设置为 web 页面的尺寸(译注: 不包含边框), 这意味着窗口的实际尺寸将包括窗口边框的大小，稍微会大一点。 
+          useContentSize: true,
+          //自动隐藏菜单栏，除非按了Alt键。
+          autoHideMenuBar: true,
+          //窗口大小是否可调整
+          resizable: arg?.resizable ?? false,
+          //窗口的最小高度
+          minWidth: arg?.minWidth || 842,
+          show: arg?.show ?? false,
+          //窗口透明度
+          opacity: arg?.opacity || 1.0,
+          //当前窗口的父窗口ID
+          parent: parentID,
+          frame: IsUseSysTitle,
+          webPreferences: {
+            nodeIntegration: true,
+            webSecurity: false,
+            //使用webview标签 必须开启
+            webviewTag: arg?.webview ?? false,
+            // 如果是开发模式可以使用devTools
+            devTools: process.env.NODE_ENV === 'development',
+            // 在macos中启用橡皮动画
+            scrollBounce: process.platform === 'darwin',
+            // 临时修复打开新窗口报错
+            contextIsolation: false
+          }
+        })
+        childWin.loadURL(winURL + `#${arg.url}`)
+        cidJson.id = childWin?.id
+        cidJson.url = arg.url
+        cidArray.push(cidJson)
+        childWin.webContents.once('dom-ready', () => {
+          childWin.show()
+          childWin.webContents.send('send-data', arg.sendData)
+          if (arg.IsPay) {
+            // 检查支付时候自动关闭小窗口
+            const testUrl = setInterval(() => {
+              const Url = childWin.webContents.getURL()
+              if (Url.includes(arg.PayUrl)) {
+                childWin.close()
+              }
+            }, 1200)
+            childWin.on('close', () => {
+              clearInterval(testUrl)
+            })
+          }
+        })
+        childWin.on('closed', () => {
+          childWin = null
+          let index = cidArray.indexOf(cidJson)
+          if (index > -1) {
+            cidArray.splice(index, 1);
+          }
+        })
+      }
     })
   }
 }
+
 
 
 ```

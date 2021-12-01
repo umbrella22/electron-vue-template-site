@@ -33,35 +33,52 @@ npm install ffi-napi
   - 然后放置你的 dll 文件到你新创建的文件夹内重启一次，然后就可以按照一下方法进行调用了
   - 打包前，请去 package.json 文件找到`extraFiles`数组，并且在内填入你刚刚创建的文件夹名称，同样也是字符串
 
-  ```js
-  // 调用
-  import ffi from "ffi-napi"
+### 主进程中使用
 
-  const dll = ffi.Library(`${__lib}/文件名.后缀`, {
-        // 这里是c++中对js暴漏的方法，举个例子：
-        // 这里是c++中暴漏了一个名为test的方法，它接受两个int类型，返回结果也是int类型
-        'test':['int'['int','int']]
-      })
-      // 假设该c++中的方法是相加并抛出结果，那么这里得出的结果应该是4
-      dll.test(1,3)
-  ```
+```js
+// 主进程中调用
+import ffi from "ffi-napi";
 
-  > 此处假设我 dll 放置目录的名称叫 lib
+const dll = ffi.Library(`${process.env.libPath}/文件名.后缀`, {
+  // 这里是c++中对js暴漏的方法，举个例子：
+  // 这里是c++中暴漏了一个名为test的方法，它接受两个int类型，返回结果也是int类型
+  test: ["int"[("int", "int")]],
+});
+// 假设该c++中的方法是相加并抛出结果，那么这里得出的结果应该是4
+dll.test(1, 3);
+```
 
-  ```json
-  "build": {
-      "extraFiles": [
-      "lib"
-      ],
-  }
-  ```
+### 渲染进程中使用（无非必要，不推荐）
 
-  ::: warning 注意
-  `__lib`是不可被修改，因为本框架已经做了预先处理，所有的`__lib`均指向你在`config/index.js`文件中设置的`DllFolder`值。`记住它接受一个字符串`
-  :::
-  ::: danger 警告
-  当您觉得`_lib`作为 dll 的全局文件夹变量不太好时，您可以去`.electron-vue/webpack.renderer.config.js`和`src/index.ejs`中搜索`__lib`关键词，并将其修改成你所喜欢的即可。但是这是极度不建议的，因为您并不知道这么做所带来的后果，他可能包括但不限于：打包之后 dll 调用失败，dll 位置丢失，dev 无法启动等一系列连锁反应
-  :::
+```js
+// 渲染进程中调用
+import ffi from "ffi-napi";
+
+const dll = ffi.Library(`${__lib}/文件名.后缀`, {
+  // 这里是c++中对js暴漏的方法，举个例子：
+  // 这里是c++中暴漏了一个名为test的方法，它接受两个int类型，返回结果也是int类型
+  test: ["int"[("int", "int")]],
+});
+// 假设该c++中的方法是相加并抛出结果，那么这里得出的结果应该是4
+dll.test(1, 3);
+```
+
+> 此处假设我 dll 放置目录的名称叫 lib
+
+```json
+"build": {
+    "extraFiles": [
+    "lib"
+    ],
+}
+```
+
+::: warning 注意
+`__lib`是不可被修改，因为本框架已经做了预先处理，所有的`__lib`均指向你在`config/index.js`文件中设置的`DllFolder`值。`记住它接受一个字符串`
+:::
+::: danger 警告
+当您觉得`_lib`作为 dll 的全局文件夹变量不太好时，您可以去`.electron-vue/webpack.renderer.config.js`和`src/index.ejs`中搜索`__lib`关键词，并将其修改成你所喜欢的即可。但是这是极度不建议的，因为您并不知道这么做所带来的后果，他可能包括但不限于：打包之后 dll 调用失败，dll 位置丢失，dev 无法启动等一系列连锁反应
+:::
 
 - 但开发途中是绝对不会这么一帆风顺的，就我在摸索的时候，遇到的问题总结如下：
   - Q：控制台报错：`Uncaught Error: Dynamic Linking Error: Win32 error 126`
