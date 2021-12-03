@@ -5,10 +5,29 @@ module.exports = defineUserConfig<DefaultThemeOptions>({
   base: "/electron-vue-template-doc/",
   title: "electron-vue-template-doc",
   description: "基于vue来构建一个electron应用程序",
-  head: [["link", { rel: "icon", href: "/logo.png" }]],
+  head: [["link", { rel: "icon", href: "/logo.png" }], ["script", {}, `
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "https://hm.baidu.com/hm.js?0f50a8d84b1f3393d7b5dd1c2a7ab417";
+    var s = document.getElementsByTagName("script")[0]; 
+    s.parentNode.insertBefore(hm, s);
+  })();`],
+  ["script", { async: "async", src: "https://www.googletagmanager.com/gtag/js?id=G-JVCB4GLNFN" },],
+  [
+    "script",
+    {},
+    `
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+  
+    gtag('config', 'G-JVCB4GLNFN');
+    `
+  ]],
   themeConfig: {
     lastUpdatedText: "更新时间",
-    contributors:false,
+    contributors: false,
     locales: {
       "/": {
         navbar: [
