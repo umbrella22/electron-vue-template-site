@@ -15,15 +15,6 @@ export default defineClientAppEnhance(({
                 window._hmt.push(["_trackPageview", to.fullPath]);
             }
         }
-        // 触发谷歌的pv统计
-        if (typeof window.dataLayer != "undefined") {
-            if (to.path) {
-                window.dataLayer.push({
-                    'event': 'pageview',
-                    'page': to.fullPath
-                });
-            }
-        }
         next();
     });
 })
