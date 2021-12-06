@@ -10,9 +10,9 @@ export default defineClientAppEnhance(({
      */
     router.beforeEach((to, from, next) => {
         //触发百度的pv统计
-        if (typeof window._hmt != "undefined") {
+        if (typeof _hmt != "undefined") {
             if (to.path) {
-                window._hmt.push(["_trackPageview", to.fullPath]);
+                _hmt.push(["_trackPageview", to.fullPath]);
             }
         }
         next();
