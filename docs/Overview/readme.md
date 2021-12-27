@@ -89,18 +89,24 @@ git clone https://github.com/umbrella22/electron-vue-template.git
 # 进入项目目录
 cd electron-vue-template
 # 安装依赖
-# 如果网络非常顺畅的情况下
-yarn install
-# 如果网络出现不稳定的情况时
 npm config edit
-# 该命令会打开npm的配置文件，请在空白处添加 请自行去除下面三行前的＃号
-# registry=https://registry.npm.taobao.org/
-# electron_mirror=https://cdn.npm.taobao.org/dist/electron/ 
-# ELECTRON_BUILDER_BINARIES_MIRROR=http://npm.taobao.org/mirrors/electron-builder-binaries/
-# 然后关闭该窗口，重启命令行，删除node_modules文件夹，并重新安装依赖即可
-# 本地开发 启动项目
+# 该命令会打开npm的配置文件，请在空白处添加
+# registry=https://registry.npmmirror.com
+# ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/
+# ELECTRON_CUSTOM_DIR="{{ version }}"
+# ELECTRON_BUILDER_BINARIES_MIRROR=https://npmmirror.com/mirrors/electron-builder-binaries/
+# 然后关闭该窗口，重启命令行.
+# 使用yarn安装
+yarn or yarn install
+
+# 启动之后，会在9080端口监听
 yarn dev
+
+# build命令在不同系统环境中，需要的的不一样，需要自己根据自身环境进行配置
+yarn build
+
 ```
+
 ::: danger 注意
 强烈建议不要直接使用cnpm进行安装，由于软链接带来的玄学bug是真的没法说，最好就是用nrm切换一下registry，或者使用yarn，是最好的了。
 
