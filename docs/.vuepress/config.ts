@@ -1,7 +1,10 @@
 import { defineUserConfig } from "@vuepress/cli";
+import { webpackBundler } from '@vuepress/bundler-webpack'
 import type { DefaultThemeOptions } from "vuepress";
+import { defaultTheme } from '@vuepress/theme-default'
 
 module.exports = defineUserConfig<DefaultThemeOptions>({
+  bundler: webpackBundler(),
   base: "/electron-vue-template-doc/",
   title: "electron-vue-template-doc",
   description: "基于vue来构建一个electron应用程序",
@@ -13,7 +16,7 @@ module.exports = defineUserConfig<DefaultThemeOptions>({
     var s = document.getElementsByTagName("script")[0]; 
     s.parentNode.insertBefore(hm, s);
   })();`],],
-  themeConfig: {
+  theme: defaultTheme({
     lastUpdatedText: "更新时间",
     contributors: false,
     locales: {
@@ -43,11 +46,11 @@ module.exports = defineUserConfig<DefaultThemeOptions>({
         },
 
         // 404 page
-        notFound: ["啊嘞？看起来你进入了一个异次元页面"],
+        notFound: ["呜喵？人类这里不是你要来的地方喵~快回去喵~~~"],
         backToHome: "返回首页",
       },
     },
-  },
+  }),
   plugins: [
     [
       "@vuepress/plugin-search",
