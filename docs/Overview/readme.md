@@ -3,14 +3,14 @@
 
 [![vue](https://img.shields.io/badge/vue-2.6.14-brightgreen.svg)](https://github.com/vuejs/vue)
 [![element-ui](https://img.shields.io/badge/element--ui-2.15.2-brightgreen.svg)](https://github.com/ElemeFE/element)
-[![electron](https://img.shields.io/badge/electron-17.2.0-brightgreen.svg)](https://github.com/ElemeFE/element)
+[![electron](https://img.shields.io/badge/electron-20.1.0-brightgreen.svg)](https://github.com/ElemeFE/element)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/umbrella22/electron-vue-template/blob/master/LICENSE)
 
 起手该项目的缘由是因为[原项目](https://github.com/SimulatedGREG/electron-vue)已经停止维护了很久，electron的版本号还停滞在1.x版本，所以就在原项目的基础上更新了所有依赖，并且融入了[花裤衩大大的vue-admin](https://panjiachen.github.io/vue-element-admin-site/zh/)的核心代码以及融入了我自己的一些代码。同时如果您打算使用这些核心代码的话，还请希望结合该教程。两种electron自动更新，自定义头部等大家几乎经常用到的功能；相信在基础需求面前，本项目能够最大程度的帮助你
 ::: warning 提示
 阅读本文档即默认您拥有前端以及vue基础知识，并拥有部分node基础知识。
 
-**并确保您的 node 环境是大于或等于 14**
+**并确保您的 node 环境是大于或等于 18**
 :::
 ## 功能
 
@@ -91,10 +91,9 @@ cd electron-vue-template
 # 安装依赖
 npm config edit
 # 该命令会打开npm的配置文件，请在空白处添加
-# registry=https://registry.npmmirror.com
-# ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/
-# ELECTRON_CUSTOM_DIR="{{ version }}"
-# ELECTRON_BUILDER_BINARIES_MIRROR=https://npmmirror.com/mirrors/electron-builder-binaries/
+electron_builder_binaries_mirror=https://npmmirror.com/mirrors/electron-builder-binaries/
+electron_mirror=https://cdn.npmmirror.com/binaries/electron/
+registry=https://registry.npmmirror.com/
 # 然后关闭该窗口，重启命令行.
 # 使用yarn安装
 yarn or yarn install
@@ -128,6 +127,25 @@ yarn build
 
 ## 环境变量
 - `process.env.TERGET_ENV`：当且仅当再命令中设置了`cross-env TERGET_ENV=标识`才会生效，和`process.env.NODE_ENV`是分开管理的，您可以在`config/index`中自行导入当前变量可能代表的东西。您可以直接在渲染（主）进程中通过`process.env.TERGET_ENV`访问。
+
+## env文件夹
+- 该文件夹内存放的文件格式为 `.env`，已经预设了两个文件，`.env`和`sit.env`
+    - `.env`：它通常是在你没有指定 `-m`命令时，它会读取这个文件，并且将该文件内的所有设置项以key:value的形式挂载到`process.env`中（渲染进程）（主进程里为`process.env.config`），您可以通过直接访问`process.env.xxx`（其中xxx为您自行设置的变量）
+    - `sit.env`：该文件为预设测试环境
+- `.env`文件通常以`环境名.env`的组合存在于`env`文件夹内，在使用时，您只需要在命令后添加 `-m`以及对应的环境名称，即可访问到。
+    - 例如预发布环境，我们规定为release，那么文件通常设置为 `release.env` 在使用时，`-m` 后则跟随为release.
+### 示例
+**这将展示在默认和指定了-m参数情况下的状态**
+```json
+scripts:{
+    "dev": "cross-env TERGET_ENV=development node .electron-vue/dev-runner.js",
+    "dev:sit": "cross-env TERGET_ENV=development node .electron-vue/dev-runner.js -m sit",
+    "dev:release": "cross-env TERGET_ENV=development node .electron-vue/dev-runner.js -m release",
+    "build": "cross-env BUILD_TARGET=clean node .electron-vue/build.js  && electron-builder",
+    "build:sit": "cross-env BUILD_TARGET=clean node .electron-vue/build.js -m sit  && electron-builder",
+    "build:release": "cross-env BUILD_TARGET=clean node .electron-vue/build.js -m release  && electron-builder",
+}
+```
 ## Vue 生态圈
 
 **首先了解这些 vue 生态圈的东西，会对你上手本项目有很大的帮助。**
