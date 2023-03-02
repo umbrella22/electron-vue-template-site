@@ -1,17 +1,12 @@
-
 # 介绍
 
-[![vue](https://img.shields.io/badge/vue-2.6.14-brightgreen.svg)](https://github.com/vuejs/vue)
-[![element-ui](https://img.shields.io/badge/element--ui-2.15.2-brightgreen.svg)](https://github.com/ElemeFE/element)
-[![electron](https://img.shields.io/badge/electron-20.1.0-brightgreen.svg)](https://github.com/ElemeFE/element)
-[![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/umbrella22/electron-vue-template/blob/master/LICENSE)
-
-起手该项目的缘由是因为[原项目](https://github.com/SimulatedGREG/electron-vue)已经停止维护了很久，electron的版本号还停滞在1.x版本，所以就在原项目的基础上更新了所有依赖，并且融入了[花裤衩大大的vue-admin](https://panjiachen.github.io/vue-element-admin-site/zh/)的核心代码以及融入了我自己的一些代码。同时如果您打算使用这些核心代码的话，还请希望结合该教程。两种electron自动更新，自定义头部等大家几乎经常用到的功能；相信在基础需求面前，本项目能够最大程度的帮助你
+两种 electron 自动更新，自定义头部等大家几乎经常用到的功能；相信在基础需求面前，本项目能够最大程度的帮助你
 ::: warning 提示
-阅读本文档即默认您拥有前端以及vue基础知识，并拥有部分node基础知识。
+阅读本文档即默认您拥有前端以及 vue 基础知识，并拥有部分 node 基础知识。
 
 **并确保您的 node 环境是大于或等于 18**
 :::
+
 ## 功能
 
 ```
@@ -41,20 +36,24 @@
 │   └── lib                    # 打包依赖（win）
 ├── config                     # 构建相关
 ├── dist                       # webpack临时工作目录
+├── env                        # 环境相关
 ├─src                          # 源码目录
 │  ├─main                      # 主进程目录
-│  │  ├─config                 # 主进程配置文件夹
-│  │  │    ├─DisableButton.js  # 配置全局快捷键禁用
-│  │  │    ├─StaticPath.js     # 静态路径文件
-│  │  │    └─menu.js           # 主进程的自定义菜单
+│  │  ├── config               # 主进程配置
+│  │  │    ├── DisableButton.js# 按钮禁用
+│  │  │    ├── StaticPath.js   # 静态路径
+│  │  │    ├── const.js        # 静态变量
+│  │  │    ├── hotPublish.js   # 热更新配置
+│  │  │    └── menu.js         # 菜单
 │  │  ├─server                 # 内置服务端文件夹
 │  │  │    ├─index.js          # 内置服务端启动
 │  │  │    └─server.js         # 内置服务端主体
 │  │  ├─services               # 主进程服务文件夹
-│  │  │    ├─checkupdate.js    # electron-updater更新
-│  │  │    ├─downloadFile.js   # webContents类更新
-│  │  │    ├─ipcMain.js        # ipcMain通讯
-│  │  │    └─windowManager.js  # 初始出所有窗口
+│  │  │    ├── HotUpdater.js   # 热更新
+│  │  │    ├── checkupdate.js  # electron-updater
+│  │  │    ├── downloadFile.js # 下载文件
+│  │  │    ├── ipcMain.js      # ipc通讯
+│  │  │    └── windowManager.js# 窗口管理
 │  │  └─index.js               # 主进程入口
 │  └─renderer                  # 渲染进程文件夹
 │      ├─api                   # 请求以及数据库操作文件夹
@@ -80,9 +79,11 @@
 ```
 
 ## 安装
+
 ::: danger 注意
 请不要自作主张在安装依赖的时候添加`-g`参数！除非您很清楚您正在做什么！
 :::
+
 ```bash
 # clone项目
 git clone https://github.com/umbrella22/electron-vue-template.git
@@ -107,35 +108,42 @@ yarn build
 ```
 
 ::: danger 注意
-强烈建议不要直接使用cnpm进行安装，由于软链接带来的玄学bug是真的没法说，最好就是用nrm切换一下registry，或者使用yarn，是最好的了。
+强烈建议不要直接使用 cnpm 进行安装，由于软链接带来的玄学 bug 是真的没法说，最好就是用 nrm 切换一下 registry，或者使用 yarn，是最好的了。
 
-一般遇到`Electron failed to install correctly，please delete node_moules/electron and try installing again`这种错误时，就是electron本体没有下载成功，删除node_module文件夹，并按照上面的设置进行electron镜像地址设置之后就好了
+一般遇到`Electron failed to install correctly，please delete node_moules/electron and try installing again`这种错误时，就是 electron 本体没有下载成功，删除 node_module 文件夹，并按照上面的设置进行 electron 镜像地址设置之后就好了
 
 :::
 
 ::: warning 注意
-这里的环境指的是windows下，如果您是MacOS或者是linux的话，您可能需要熟悉vim的操作。
+这里的环境指的是 windows 下，如果您是 MacOS 或者是 linux 的话，您可能需要熟悉 vim 的操作。
 :::
 
 在启动完成之后，就会自动打开程序界面了；接下来你就可以针对你自己的需求进行代码的修改和业务开发
 
 ## 全局文件夹
+
 在本项目中内置了两个全局文件夹：
-- `__static`：在被打包成asar之后，依旧能够提供虚拟路径，一般满足静态文件访问。
-- `__lib`：(渲染进程)无论是否启用asar，均提供一个实体的绝对路径，可在config文件夹中设置，详情请查看调用dll章节。
-- `process.env.libPath`：(主进程)无论是否启用asar，均提供一个实体的绝对路径，可在config文件夹中设置，详情请查看调用dll章节。
+
+- `__static`：在被打包成 asar 之后，依旧能够提供虚拟路径，一般满足静态文件访问。
+- `__lib`：(渲染进程)无论是否启用 asar，均提供一个实体的绝对路径，可在 config 文件夹中设置，详情请查看调用 dll 章节。
+- `process.env.libPath`：(主进程)无论是否启用 asar，均提供一个实体的绝对路径，可在 config 文件夹中设置，详情请查看调用 dll 章节。
 
 ## 环境变量
+
 - `process.env.TERGET_ENV`：当且仅当再命令中设置了`cross-env TERGET_ENV=标识`才会生效，和`process.env.NODE_ENV`是分开管理的，您可以在`config/index`中自行导入当前变量可能代表的东西。您可以直接在渲染（主）进程中通过`process.env.TERGET_ENV`访问。
 
-## env文件夹
+## env 文件夹
+
 - 该文件夹内存放的文件格式为 `.env`，已经预设了两个文件，`.env`和`sit.env`
-    - `.env`：它通常是在你没有指定 `-m`命令时，它会读取这个文件，并且将该文件内的所有设置项以key:value的形式挂载到`process.env`中（渲染进程）（主进程里为`process.env.config`），您可以通过直接访问`process.env.xxx`（其中xxx为您自行设置的变量）
-    - `sit.env`：该文件为预设测试环境
+  - `.env`：它通常是在你没有指定 `-m`命令时，它会读取这个文件，并且将该文件内的所有设置项以 key:value 的形式挂载到`process.env`中（渲染进程）（主进程里为`process.env.config`），您可以通过直接访问`process.env.xxx`（其中 xxx 为您自行设置的变量）
+  - `sit.env`：该文件为预设测试环境
 - `.env`文件通常以`环境名.env`的组合存在于`env`文件夹内，在使用时，您只需要在命令后添加 `-m`以及对应的环境名称，即可访问到。
-    - 例如预发布环境，我们规定为release，那么文件通常设置为 `release.env` 在使用时，`-m` 后则跟随为release.
+  - 例如预发布环境，我们规定为 release，那么文件通常设置为 `release.env` 在使用时，`-m` 后则跟随为 release.
+
 ### 示例
-**这将展示在默认和指定了-m参数情况下的状态**
+
+**这将展示在默认和指定了-m 参数情况下的状态**
+
 ```json
 scripts:{
     "dev": "cross-env TERGET_ENV=development node .electron-vue/dev-runner.js",
@@ -146,6 +154,7 @@ scripts:{
     "build:release": "cross-env BUILD_TARGET=clean node .electron-vue/build.js -m release  && electron-builder",
 }
 ```
+
 ## Vue 生态圈
 
 **首先了解这些 vue 生态圈的东西，会对你上手本项目有很大的帮助。**

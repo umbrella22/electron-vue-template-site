@@ -3,18 +3,14 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "docs:dev": "vuepress dev docs --clean-cache",
-    "docs:build": "vuepress build docs --clean-cache"
+    "dev:docs": "vitepress dev docs",
+    "build:docs": "vitepress build docs"
   },
   "author": "sky <https://github.com/umbrella22>",
   "license": "ISC",
-  "dependencies": {
-    "vuepress": "^2.0.0-beta.41"
-  },
+  "dependencies": {},
   "devDependencies": {
-    "@vuepress/bundler-webpack": "^2.0.0-beta.41",
-    "@vuepress/plugin-search": "^2.0.0-beta.41",
-    "postcss-loader": "^6.2.1",
-    "sass-loader": "^12.6.0"
+    "vitepress": "^1.0.0-alpha.49",
+    "vue": "^3.2.47"
   }
 }
