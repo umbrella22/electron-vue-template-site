@@ -92,5 +92,5 @@ user32.SetWindowCompositionAttribute(
 > 如果一切顺利的话您将得到如下图的效果
 
 <div style="display: flex;justify-content: center;">
-<img style="width: 290px;" src="/electron-vue-template-doc/images/img/maoboli.png">
+<img style="width: 290px;" src="/images/img/maoboli.png">
 </div>
