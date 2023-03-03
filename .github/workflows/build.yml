@@ -21,7 +21,7 @@ jobs:
       - name: Build
         run: |
           yarn --frozen-lockfile
-          yarn docs:build
+          yarn build:docs
       - name: Deploy
         if: success()
         uses: crazy-max/ghaction-github-pages@v2
