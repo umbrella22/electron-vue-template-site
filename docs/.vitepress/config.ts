@@ -10,6 +10,7 @@ export default defineConfig({
   markdown: {
     lineNumbers: true,
   },
+  cleanUrls: true,
   lastUpdated: true,
   appearance: true,
   themeConfig: {
@@ -28,10 +29,10 @@ export default defineConfig({
       },
     ],
     sidebar: {
-      "/about/": [
+      "/apps/": [
         {
-          text: "关于",
-          items: [{ text: "文档配置", link: "/about/" }],
+          text: "案例展示",
+          items: [{ text: "案例展示", link: "/apps/" }],
         },
       ],
       ...introduceSidebar(),
@@ -47,9 +48,9 @@ function nav() {
       activeMatch: "/project|essentials|advanced/",
     },
     {
-      text: "关于",
-      link: "/about/",
-      activeMatch: "/about/",
+      text: "案例展示",
+      link: "/apps/",
+      activeMatch: "/apps/",
     },
     {
       text: "相关文档",

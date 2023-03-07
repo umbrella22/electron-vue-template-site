@@ -85,10 +85,12 @@
 :::
 
 ```bash
-# clone项目
+# clone项目 webpack+vue2.7
 git clone https://github.com/umbrella22/electron-vue-template.git
+# clone项目 vite+vue3
+git clone https://github.com/umbrella22/electron-vite-template.git
 # 进入项目目录
-cd electron-vue-template
+cd electron-vue-template or electron-vite-template
 # 安装依赖
 npm config edit
 # 该命令会打开npm的配置文件，请在空白处添加
@@ -130,7 +132,7 @@ yarn build
 
 ## 环境变量
 
-- `process.env.TERGET_ENV`：当且仅当再命令中设置了`cross-env TERGET_ENV=标识`才会生效，和`process.env.NODE_ENV`是分开管理的，您可以在`config/index`中自行导入当前变量可能代表的东西。您可以直接在渲染（主）进程中通过`process.env.TERGET_ENV`访问。
+- `process.env.TERGET_ENV`：仅工具标识是否清空产物文件夹
 
 ## env 文件夹
 
@@ -161,12 +163,11 @@ scripts:{
 
 1. [Vue Router](https://router.vuejs.org/) 是 vue 官方的路由。它能快速的帮助你构建一个单页面或者多页面的项目。
 
-2. [Vuex](https://vuex.vuejs.org/) 是一个专为 Vue.js 应用程序开发的状态管理模式。它采用集中式存储管理应用的所有组件的状态，并以相应的规则保证状态以一种可预测的方式发生变化。它能解决你很多全局状态或者组件之间通信的问题。
+2. [pinia](https://pinia.vuejs.org/) 符合直觉的 Vue.js 状态管理库,类型安全、可扩展性以及模块化设计。
 
 3. [Vue Loader](https://vue-loader.vuejs.org) 是为 vue 文件定制的一个 webpack 的 loader，它允许你以一种名为单文件组件 (SFCs)的格式撰写 Vue 组件。它能在开发过程中使用热重载来保持状态，为每个组件模拟出 scoped CSS 等等功能。不过大部分情况下你不需要对它直接进行配置，脚手架都帮你封装好了。
 
-4) [Vue Test Utils](https://vue-test-utils.vuejs.org/) 是官方提供的一个单元测试工具。它能让你更方便的写单元测试。
+4. [Vue Dev-Tools](https://github.com/vuejs/vue-devtools) Vue 在浏览器下的调试工具。写 vue 必备的一个浏览器插件，能大大的提高你调试的效率。
 
-5) [Vue Dev-Tools](https://github.com/vuejs/vue-devtools) Vue 在浏览器下的调试工具。写 vue 必备的一个浏览器插件，能大大的提高你调试的效率。
-
-6) [Vetur](https://github.com/vuejs/vetur) 是 VS Code 的插件. 如果你使用 VS Code 来写 vue 的话，这个插件是必不可少的。
+5. [Vetur](https://github.com/vuejs/vetur) 是 VS Code 的插件. 如果你使用 VS Code 来写 vue 的话，这个插件是必不可少的。
+6. [volar](https://github.com/johnsoncodehk/volar) 是 VS Code 的插件. 如果你使用 VS Code 来写 vue3 的话，这个插件是必不可少的。

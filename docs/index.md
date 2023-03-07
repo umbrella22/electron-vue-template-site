@@ -14,6 +14,9 @@ hero:
     - text: 介绍
       link: /project/
     - theme: alt
+      text: 案例展示
+      link: /apps/
+    - theme: alt
       text: GitHub
       link: https://github.com/umbrella22/electron-vue-template
     - theme: alt
