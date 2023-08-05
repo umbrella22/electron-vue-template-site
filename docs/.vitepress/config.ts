@@ -124,6 +124,7 @@ function introduceSidebar() {
         { text: "多窗口", link: "/advanced/more-win" },
         { text: "纯净版", link: "/advanced/no-lay-out" },
         { text: "构建工具", link: "/advanced/building-tools" },
+        { text: "增量更新", link: "/advanced/hot-update-rust" },
       ],
     },
   ];
