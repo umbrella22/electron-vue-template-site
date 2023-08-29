@@ -21,11 +21,12 @@ jobs:
       - name: Build
         run: |
           yarn --frozen-lockfile
-          yarn build:docs
+          yarn build
       - name: Deploy
         if: success()
         uses: crazy-max/ghaction-github-pages@v2
         with:
+          target_branch: gh-pages
           commit_message: Update Page file
           build_dir: ./docs/.vuepress/dist
         env:

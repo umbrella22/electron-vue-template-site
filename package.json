@@ -2,15 +2,16 @@
   "name": "electron-vue-template-doc",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "scripts": {
-    "dev:docs": "vitepress dev docs",
-    "build:docs": "vitepress build docs"
+    "dev": "vitepress dev docs",
+    "build": "vitepress build docs"
   },
   "author": "sky <https://github.com/umbrella22>",
   "license": "ISC",
   "dependencies": {},
   "devDependencies": {
-    "vitepress": "^1.0.0-beta.2",
+    "vitepress": "^1.0.0-rc.10",
     "vue": "^3.3.4"
   }
 }
